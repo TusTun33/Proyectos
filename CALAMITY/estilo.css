@@ -1,0 +1,196 @@
+:root{
+    --CarlosDiaz-color-principal:#025E73; 
+    --CarlosDiaz-color-2:#011f26e8;
+    --CarlosDiaz-color-3:#a5a692e8;
+    --CarlosDiaz-color-4:#bfb78ff7;
+    --CarlosDiaz-color-5:#F2A71B;
+    
+    --CarlosDiaz-padding-rem: 2rem;
+    --CarlosDiaz-padding-30: 30%;
+    --CarlosDiaz-padding-80: 80%;
+    --CarlosDiaz-padding-100: 100%;
+    --CarlosDiaz-padding-150: 150%;
+
+    --CarlosDiaz-espaciado-m: 1rem;
+    --CarlosDiaz-espaciado-l: 3rem;
+    --CarlosDiaz-espaciado-xl: 8rem;
+}
+html {
+    display: flex;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+    .fondo1 {
+        background-image:url(imatges/fondo2.png);
+        background-size:cover;
+        background-position: center;
+        display: flex;         
+                         
+    
+    }
+
+/* Header */
+header {
+    background-color: var(--CarlosDiaz-color-4);
+    border: 3px solid var(--CarlosDiaz-color-principal);
+    display: flex;
+    align-items: center; 
+    gap: 100px; 
+    width: var(--CarlosDiaz-padding-80);
+    padding-top: var(--CarlosDiaz-padding-rem);
+    padding-bottom: var(--CarlosDiaz-padding-rem);
+    padding-left: var(--CarlosDiaz-padding-rem);
+}
+
+    .section__header {
+        margin-left: var(--CarlosDiaz-espaciado-xl);
+    }
+    .header__p {
+        color: var(--CarlosDiaz-color-principal);
+    }
+    
+    h1 {
+       font-size: 3rem;
+        color: var(--CarlosDiaz-color-principal);
+    }
+    .boton {
+        border: 2px solid var(--CarlosDiaz-color-5);
+        color: var(--CarlosDiaz-color-5);
+        padding: var(--CarlosDiaz-espaciado-m);
+        border-radius: 15px; 
+    }
+    .boton:hover{
+        background-color: var(--CarlosDiaz-color-2);
+    }
+    .header__img {
+        margin-right: var(--CarlosDiaz-espaciado-xl);
+        height: 350px;
+        display: flex;
+        border: 3px solid var(--CarlosDiaz-color-principal);
+        border-radius: 50%;
+    }
+
+/* Main */
+.section_main {
+    width: var(--CarlosDiaz-padding-100);
+    margin-top: var(--CarlosDiaz-espaciado-xl);
+    background-color: var(--CarlosDiaz-color-2);
+    display: flex;
+    align-items: center;
+    border: 3px solid var(--CarlosDiaz-color-5); 
+    border-radius: 15px;
+}
+    .descripcion {
+       padding-left: var(--CarlosDiaz-padding-rem);
+       margin-left: var(--CarlosDiaz-espaciado-l);
+        
+    }
+        .main__p { 
+        color:var(--CarlosDiaz-color-4);
+        max-width: 30ch;    
+        }
+
+    .section__proyectos {
+        border-radius: 15px;
+        flex-direction: column;
+        background-color: var(--CarlosDiaz-color-gris);
+        margin-left: var(--CarlosDiaz-espaciado-xl);
+        text-align: center;
+        padding-bottom: var(--CarlosDiaz-padding-rem);
+    }
+
+        .proyectos {
+            border: 1px solid var(--CarlosDiaz-color-5);
+            border-radius: 15px;
+            padding-left: var(--CarlosDiaz-padding-rem);
+            padding-right: var(--CarlosDiaz-padding-rem);
+            padding-top: var(--CarlosDiaz-padding-rem);
+        }
+
+            .img {
+                width: 25rem;
+                border-radius: 15px;
+            }
+
+    .section__habilidades {
+        border: 1px solid var(--CarlosDiaz-color-5);
+        border-radius: 15px;
+        padding: var(--CarlosDiaz-espaciado-l);
+        margin-left: var(--CarlosDiaz-espaciado-xl);
+        margin-right: var(--CarlosDiaz-espaciado-l);
+    }
+
+        .habilidades {
+            flex-direction: column;
+            display: flex;
+            padding-block: var(--CarlosDiaz-padding-30);
+        }
+
+        .icono {
+            font-size: 3rem;
+            color: var(--CarlosDiaz-color-5);
+            text-align: center;
+        }
+
+/* Footer */
+footer {
+    width: var(--CarlosDiaz-padding-80);
+    margin-top: var(--CarlosDiaz-espaciado-xl);
+    background-color: var(--CarlosDiaz-color-3);
+    border: 2px solid var(--CarlosDiaz-color-5);
+    border-radius: 15px;
+}
+
+.section__footer {
+    color: var(--CarlosDiaz-color-5);
+    padding-top: var(--CarlosDiaz-espaciado-m);
+    text-align: center;
+}
+
+.section__redes {
+    display: flex;
+    justify-content: center;
+}
+.redes {
+    margin: var(--CarlosDiaz-espaciado-l);
+    padding: var(--CarlosDiaz-espaciado-m);
+    padding-left: var(--CarlosDiaz-padding-rem);
+    padding-right: var(--CarlosDiaz-padding-rem);
+}
+
+/* Clases genericas de texto  */
+h2 {
+    color: var(--CarlosDiaz-color-5);
+    align-self: center;
+}
+
+p {
+    color: var(--CarlosDiaz-color-principal);
+    align-self: center;
+    font-size: 1.5rem;
+}
+
+/* Css pagina contacto */
+
+
+/* Responsive */
+@media (max-width: 600px) {
+    .blocks {
+        flex-direction: column;
+    }
+    header {
+        flex-direction: column;
+        height: auto;
+    }
+}
