@@ -194,3 +194,19 @@ p {
         height: auto;
     }
 }
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.card h3 {
+  margin: 0 0 4px;
+}
+
+.card .company {
+  color: #666;
+  font-size: 14px;
+  margin: 0 0 8px;
+}

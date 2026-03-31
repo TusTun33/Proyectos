@@ -60,7 +60,9 @@
         </section>                             
     </section>
 
+    
 </main>
+
 
 <footer>
     <section class="section__footer">        
@@ -84,6 +86,44 @@
             </section>
         </section>
     </section>
+    <!-- Put this empty div where you want the cards to appear -->
+<div id="experience"></div>
+
+<!-- si esto sale mal fokin claude -->
+<script>
+  const jobs = [
+    {
+      title: "panadero con el pan",
+      company: "panaderia paola",
+      date: "2022 – 2023",
+      description: "hornear pan"
+    },
+    {
+      title: "Invcocador",
+      company: "Terraria",
+      date: "2021 – 2022",
+      description: "matar al muro de carne"
+    },
+    {
+      title: "salchipapa",
+      company: "en la esquina",
+      date: "2021 – 2022",
+      description: "salchipapa con salsa de ajo"
+    }
+  ];
+
+  const container = document.getElementById("experience");
+
+  jobs.forEach(function(job) {
+    container.innerHTML += `
+      <div class="card">
+        <h3>${job.title}</h3>
+        <p class="company">${job.company} — ${job.date}</p>
+        <p>${job.description}</p>
+      </div>
+    `;
+  });
+</script>
 </footer>   
 </body>
 </html>
