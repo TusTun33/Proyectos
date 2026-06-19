@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursor Follow</title>
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        background: linear-gradient(135deg, #dfdfdf, #a2d8f1);
+        overflow: hidden; 
+        cursor: crosshair;
+        font-family: sans-serif;
+    }
+
+    .emoji {
+        position: absolute;
+        font-size: 30px;
+        pointer-events: none;
+        user-select: none;
+        animation: caer 2s forwards;
+    }
+
+    .emoji-explosion {
+        position: absolute;
+        font-size: 40px;
+        pointer-events: none;
+        user-select: none;
+        animation: explosion 1s forwards;
+    }
+
+    @keyframes caer {
+        0% {
+            opacity:1;
+            transform: translateY(0) rotate(0deg) scale(1);
+        }
+        100% {
+            opacity:0;
+            transform: translateY(300px) rotate(720deg) scale(0.3);
+        }
+    }
+
+    @keyframes explosion {
+        0% {
+            opacity: 1;
+            transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+        100% {
+            opacitiy: 0;
+            transform: translate(var(--dx), var(--dy)) rotate(720deg) scale(0.2);
+        }
+    }
+
+    .titulo {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        font-size: 24px;
+        text-align: center;
+        opacity: 0.7;
+    }
+
+    .contador {
+        position: absolute;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #ffeb3b;
+        font-size: 48px;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 235, 59, 0.8);
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .contador:hover {
+        transform: translateX(-50%) scale(1.2);
+    }
+    
+</style>
+</head>
+
+<body>
+    <div class="titulo">Mover el mouse por todos lados</div>
+    <div class="contador" id="contador">0</div>
+    <script>
+        const emojis = ['✨', '⭐', '💫', '🌟', '💖', '🔥', '🌈', '🦄', '🍕', '🐸'];
+
+        let contadorEmojis = 0;
+        document.addEventListener('mousemove', (e) => {
+            crearEmoji(e.clientX, e.clientY);
+        });
+        //evento explosion
+        document.addEventListener('click', (e) => {
+            crearExplosion(e.clientX, e.clientY);
+        });
+        function crearEmoji(x, y) {
+            const emojiRandom = emojis[Math.floor(Math.random() * emojis.length)];
+        
+            const emoji = document.createElement('span');
+            emoji.classList.add('emoji');
+            emoji.textContent = emojiRandom;
+
+            emoji.style.left = (x + (Math.random() * 20 - 10)) + 'px';
+            emoji.style.top = y + 'px';
+
+            document.body.appendChild(emoji);
+
+            contadorEmojis = contadorEmojis + 1;
+            document.getElementById('contador').textContent = contadorEmojis;
+
+            setTimeout(() => {
+                emoji.remove();
+            }, 2000);
+
+            document.getElementById('contador').addEventListener('click', () => {
+                contadorEmojis = 0;
+                document.getElementById('contador').textContent = 0;                
+            });
+            
+        }
+// 💥 NUEVA función: Explosión de 10 emojis
+        function crearExplosion(x, y) {
+            for (let i = 0; i < 10; i++) {
+                const emojiRandom = emojis[Math.floor(Math.random() * emojis.length)];
+                const emoji = document.createElement('span');
+                emoji.classList.add('emoji-explosion');
+                emoji.textContent = emojiRandom; 
+
+                emoji.style.left = x + 'px';
+                emoji.style.top = y + 'px';
+
+                const angulo = (Math.random() * 360) * (Math.PI / 180);
+                const distancia = 150 + Math.random() * 100;
+
+                const dx = Math.cos(angulo) * distancia;
+                const dy = Math.sin(angulo) * distancia;
+
+                emoji.style.setProperty('--dx', dx + 'px');
+                emoji.style.setProperty('--dy', dy + 'px');
+
+                document.body.appendChild(emoji);
+
+                contadorEmojis++;
+                document.getElementById('contador').textContent = contadorEmojis;
+
+                setTimeout(() => {
+                    emoji.remove();
+                }, 1000);
+             }        
+        }
+
+            document.getElementById('contador').addEventListener('click', (e) => {
+                e.stopPropagation();
+                contadorEmojis = 0;
+                document.getElementById('contador').textContent = 0;
+            });
+    </script>
+</body>
+</html>
