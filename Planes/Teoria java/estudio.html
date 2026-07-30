@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<script>
+/* 
+"use strict" o 'use strict'
+
+let: son variables que pueden cambiar el valor
+const: son variables que no pueden cambiar el valor
+para las variables los nombres tambien admiten los simbolos _ y $ , 
+y no pueden empezar por numeros pero si pueden contener
+
+Los valores de pueden contener tanto strings como digitos (lenguajes que permiten esto son: Dynamically typed)
+// no error
+let message = "hello";
+message = 123456;
+
+Numeros:
+* / + -  |   Infinity  | -Infinity | NaN
+
+Number: para numeros
+
+Strings:
+Double quotes: "Hello". Solo letras
+Single quotes: 'Hello'. Letras y numeros
+Backticks: `Hello`.  They allow us to embed variables and expressions into a string by wrapping them in ${…}, for example:
+
+let name = "John";
+
+// embed a variable
+alert( `Hello, ${name}!` ); // Hello, John!
+
+// embed an expression
+alert( `the result is ${1 + 2}` ); // the result is 3
+The expression inside ${…} is evaluated and the result becomes a part of the string. We can put anything in there: a variable like name or an arithmetical expression like 1 + 2 or something more complex.
+
+Boolean:
+true
+false
+
+null: nothing, empty etc , usado para indicar que una variable no tiene valor
+
+undefined: value is not assigned, error que sale cuando no se le da un valor a una variable
+
+symbol: for unique indetifiers
+
+object: para strucuras de datos complejas
+
+
+
+typeoff: para saber el tipo de variable
+typeof "John" // string
+typeof 3.14 // number
+typeof NaN // number
+typeof false // boolean
+typeof undefined // undefined
+
+
+-------Interacciones--------
+
+alert: alert("Hello");
+prompt: result = prompt(title, [default]);
+    es igual que el alert, pero enseña unos botones de aceptar o cancelar y una casilla para introducir algo.
+
+    title
+        The text to show the visitor.
+    default
+        An optional second parameter, the initial value for the input field.
+
+confirm: result = confirm(question);
+    solamente los botones de aceptar o cancelar que representan true o false
+
+Task: Create a web-page that asks for a name and outputs it.
+
+let name = prompt("What is your name?", "");
+alert(name);
+
+----------Type Conversions----------
+
+String conversion: 
+    let value = true;
+    alert(typeof value); // boolean
+
+    value = String(value); // now value is a string "true"
+    alert(typeof value); // string
+
+Numeric Conversion:
+    Numeric conversion in mathematical functions and expressions happens automatically.
+    For example, when division / is applied to non-numbers:
+    alert( "6" / "2" ); // 3, strings are converted to numbers
+
+    let str = "123";
+    alert(typeof str); // string
+
+    let num = Number(str); // becomes a number 123
+
+    alert(typeof num); // number
+
+Boolean Conversion: 
+    alert( Boolean(1) ); // true
+    alert( Boolean(0) ); // false
+    alert( Boolean("hello") ); // true
+    alert( Boolean("") ); // false
+    alert( Boolean("0") ); // true
+    alert( Boolean(" ") ); // spaces, also true (any non-empty string is true)
+
+
+-------------Basic operators, maths-------------
+Addition +,                             // Converts non-numbers (funciona como el number())
+                                            alert( +true ); // 1
+                                            alert( +"" );   // 0
+Subtraction -,
+Multiplication *,
+Division /,
+
+Operaciones especiales:
+
+Remainder %, cuando se usa esto, el resultado que da es el residuo de la division entre los numeros
+alert( 5 % 2 ); // 1, the remainder of 5 divided by 2
+alert( 8 % 3 ); // 2, the remainder of 8 divided by 3
+alert( 8 % 4 ); // 0, the remainder of 8 divided by 4
+
+Exponentiation **, El operador de exponenciación A ** B eleva A a la potencia de B.
+alert( 2 ** 2 ); // 2² = 4
+alert( 2 ** 3 ); // 2³ = 8
+alert( 2 ** 4 ); // 2⁴ = 16
+
+Operaciones: 
+    let n = 2;
+    n += 5; // now n = 7 (same as n = n + 5)
+    n *= 2; // now n = 14 (same as n = n * 2)
+    alert( n ); // 14
+
+    let n = 2;
+    n *= 3 + 5; // right part evaluated first, same as n *= 8
+    alert( n ); // 16
+
+    let counter = 2;
+    counter++;        // works the same as counter = counter + 1, but is shorter
+    alert( counter ); // 3
+
+    let counter = 2;
+    counter--;        // works the same as counter = counter - 1, but is shorter
+    alert( counter ); // 1
+
+    Si queremos aumentar un valor y utilizar inmediatamente el resultado del operador, necesitamos la forma de prefijo:
+        let counter = 1;
+        let a = ++counter; // (*)
+        alert(a); // 2
+
+    Si queremos incrementar un valor pero usar su valor anterior, necesitamos la forma posfija:
+        let counter = 1;
+        let a = counter++; // (*) changed ++counter to counter++
+        alert(a); // 1
+
+---------La lista de operadores----------
+
+Y ( &)
+O ( |)
+XOR ( ^)
+NO ( ~)
+DESPLAZAMIENTO A LA IZQUIERDA ( <<)
+DESPLAZAMIENTO A LA DERECHA ( >>)
+DESPLAZAMIENTO A LA DERECHA CON RELLENO DE CERO ( >>>)
+
+---------------Comparaciones--------------
+
+==: igual
+!=: diferente
+<: menor que
+>: mayor que
+<=: menor o igual que
+>=: mayor o igual que
+===: sirve para comparar el tipo, si son iguales sera true
+
+Booleano es el resultado
+    alert( 'Z' > 'A' ); // true
+    alert( 'Glow' > 'Glee' ); // true
+    alert( 'Bee' > 'Be' ); // true
+
+
+---------------Conditional branching: if, '?'----------------
+let accessAllowed;
+let age = prompt('How old are you?', '');
+
+if (age > 18) {
+  accessAllowed = true;
+} else {
+  accessAllowed = false;
+}
+
+alert(accessAllowed);
+
+Una otra manera hacer algo como el if es usando la logica del "?"
+La logica es: ? true : fasle
+    
+    let age = prompt('age?', 18);
+
+    let message = (age < 3) 
+    ? 'Hi, baby!' :  (age < 18) 
+    ?  'Hello!' : (age < 100) 
+    ?  'Greetings!' : 'What an unusual age!';
+
+    alert( message );
+
+El "if" para varias ramas y el "?" para solo 2 opciones
+
+
+------------Logical operators------------
+
+&&: and
+||: or
+! : not
+?? : Nullish coalescing
+
+|| (OR)
+        
+    let firstName = "";
+    let lastName = "";
+    let nickName = "SuperCoder";
+    alert( firstName || lastName || nickName || "Anonymous"); // SuperCoder
+
+    Most of the time, OR || is used in an if statement to test if any of the given conditions is true.
+    let hour = 9;
+    if (hour < 10 || hour > 18) {
+    alert( 'The office is closed.' );
+    }
+
+    alert( 1 || 0 ); // 1 (1 is truthy)
+    alert( null || 1 ); // 1 (1 is the first truthy value)
+    alert( null || 0 || 1 ); // 1 (the first truthy value)
+    alert( undefined || null || 0 ); // 0 (all falsy, returns the last value)
+ 
+    let firstName = "";
+    let lastName = "";
+    let nickName = "SuperCoder";
+    alert( firstName || lastName || nickName || "Anonymous"); // SuperCoder
+
+
+
+&& (AND)
+    
+    // if the first operand is truthy,
+    // AND returns the second operand:
+    alert( 1 && 0 ); // 0
+    alert( 1 && 5 ); // 5
+
+    // if the first operand is falsy,
+    // AND returns it. The second operand is ignored
+    alert( null && 5 ); // null
+    alert( 0 && "no matter what" ); // 0
+
+Sometimes, people use the AND && operator as a “shorter way to write if”.
+    let x = 1;
+    (x > 0) && alert( 'Greater than zero!' );
+
+    let x = 1;
+    if (x > 0) alert( 'Greater than zero!' );
+
+    Precedence of AND && is higher than OR ||
+    The precedence of AND && operator is higher than OR ||.
+
+    So the code a && b || c && d is essentially the same as 
+    if the && expressions were in parentheses: (a && b) || (c && d).
+
+
+! (NOT) 
+!! (NOT) 
+    That is, the first NOT converts the value to boolean and returns the inverse, 
+    and the second NOT inverses it again. 
+    In the end, we have a plain value-to-boolean conversion.
+
+    The precedence of NOT ! is the highest of all logical operators, 
+    so it always executes first, before && or ||.
+
+
+
+?? (fusión de null)
+    
+    El resultado de a ?? b:
+    si a está “definida”, será a,
+    si a no está “definida”, será b.
+    Es decir, ?? devuelve el primer argumento cuando este no es null ni undefined. 
+    En caso contrario, devuelve el segundo.
+
+    
+*/
+// Example logical operators
+let userName = prompt("Who's there?", '');
+
+if (userName === 'Admin') {
+
+  let pass = prompt('Password?', '');
+
+  if (pass === 'TheMaster') {
+    alert( 'Welcome!' );
+  } else if (pass === '' || pass === null) {
+    alert( 'Canceled' );
+  } else {
+    alert( 'Wrong password' );
+  }
+
+} else if (userName === '' || userName === null) {
+  alert( 'Canceled' );
+} else {
+  alert( "I don't know you" );
+} 
+
+
+</script>

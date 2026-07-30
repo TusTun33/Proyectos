@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conócenos – Signum Projects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --black: #1B1B1B; --cream: #F7F4EB; --gray: #595853;
+      --line: #D8D4C8; --font: 'Epilogue', sans-serif;
+      --side: clamp(20px, 7vw, 140px);
+    }
+    body { font-family: var(--font); background: var(--cream); color: var(--black); font-weight: 300; overflow-x: hidden; }
+
+    /* HEADER — APLICADAS SOLUCIONES WORDPRESS */
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--line);
+      height: 100px; display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0;
+      background: rgba(247, 244, 235, 0.842);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      width: 100vw !important;
+      margin-left: calc(-50vw + 50%) !important;
+      margin-right: calc(-50vw + 50%) !important;
+      max-width: 100% !important;
+    }
+    .header-logo { padding-left: var(--side); }
+    .header-logo img { height: 100px; width: auto; display: block; }
+    .site-nav { padding-right: var(--side); }
+    .site-nav ul { list-style: none; display: flex; gap: 36px; white-space: nowrap; }
+    .site-nav a {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      text-decoration: none; color: var(--gray); font-weight: 400; transition: color .2s;
+      white-space: nowrap;
+    }
+    .site-nav a:hover, .site-nav a.active { color: var(--black); }
+    .nav-burger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none;
+      padding: 4px; margin-right: var(--side);
+    }
+    .nav-burger span { display: block; width: 22px; height: 1.5px; background: var(--black); transition: transform .3s, opacity .3s; }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; top: 100px; left: 0; right: 0;
+      background: var(--cream); border-bottom: 1px solid var(--line);
+      z-index: 99; padding: 24px var(--side); flex-direction: column; gap: 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; color: var(--gray); font-weight: 400; }
+
+    /* HERO */
+    .page-hero {
+      padding: 80px var(--side) 60px;
+      border-bottom: 1px solid var(--line);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end;
+    }
+    .hero-eyebrow {
+      font-size: 9px; letter-spacing: 0.42em; text-transform: uppercase;
+      color: #aaa; font-weight: 400; margin-bottom: 20px;
+    }
+    /* ── FIX PRINCIPAL: título adaptable a cualquier pantalla ── */
+    .hero-title {
+      font-size: clamp(15px, 3.5vw, 42px) !important;
+      font-weight: 800;
+      letter-spacing: clamp(-0.5px, -0.02em, -2px);
+      line-height: 1.0;
+      color: var(--black);
+      word-break: break-word;
+    }
+    .hero-title em { font-style: italic; font-weight: 300; }
+    .hero-intro {
+      font-size: clamp(14px, 1.8vw, 16px);
+      line-height: 1.8; color: var(--gray); font-weight: 200;
+      max-width: 480px; padding-bottom: 8px;
+    }
+
+    /* MARQUEE */
+    .hero-marquee { background: var(--black); overflow: hidden; padding: 15px 0; }
+    .marquee-track { display: flex; width: max-content; animation: scroll-left 20s linear infinite; }
+    .marquee-item { display: flex; align-items: center; gap: 36px; padding-right: 36px; white-space: nowrap; }
+    .marquee-word { font-size: 11px; font-weight: 300; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(247,244,235,.7); }
+    .marquee-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(247,244,235,.25); flex-shrink: 0; }
+    @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* HISTORIA */
+    .historia-section { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--line); }
+    .historia-img { overflow: hidden; min-height: 520px; }
+    .historia-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s ease; }
+    .historia-img:hover img { transform: scale(1.03); }
+    .historia-body { padding: 80px 60px; display: flex; flex-direction: column; justify-content: center; gap: 28px; }
+    .section-eyebrow { font-size: 9px; letter-spacing: 0.42em; text-transform: uppercase; color: #aaa; font-weight: 400; }
+    .section-title { font-size: clamp(24px, 3.5vw, 36px); font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; color: var(--black); }
+    .section-body { font-size: 15px; line-height: 1.85; color: var(--gray); font-weight: 200; }
+
+    /* CIFRAS */
+    .cifras-section {
+      padding: 80px var(--side); border-bottom: 1px solid var(--line);
+      display: grid; grid-template-columns: repeat(4, 1fr);
+    }
+    .cifra-item { padding: 0 40px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
+    .cifra-item:first-child { padding-left: 0; }
+    .cifra-item:last-child { border-right: none; }
+    .cifra-num { font-size: clamp(36px, 5vw, 64px); font-weight: 700; letter-spacing: -2px; line-height: 1; color: var(--black); }
+    .cifra-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray); font-weight: 400; }
+    .cifra-desc { font-size: 13px; line-height: 1.6; color: #aaa; font-weight: 200; }
+
+    /* VALORES */
+    .valores-section { padding: 80px var(--side); border-bottom: 1px solid var(--line); }
+    .valores-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 60px; }
+    .valores-header p { font-size: 14px; line-height: 1.75; color: var(--gray); font-weight: 200; max-width: 380px; text-align: right; }
+    .valores-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .valor-item { padding: 48px 40px; border-right: 1px solid var(--line); border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 16px; }
+    .valor-item:nth-child(-n+3) { border-top: none; }
+    .valor-item:nth-child(3n) { border-right: none; }
+    .valor-num { font-size: 11px; letter-spacing: 0.3em; color: #ccc; font-weight: 400; }
+    .valor-title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; color: var(--black); line-height: 1.2; }
+    .valor-desc { font-size: 13px; line-height: 1.75; color: var(--gray); font-weight: 200; }
+
+    /* EQUIPO */
+    .equipo-section { padding: 80px var(--side); border-bottom: 1px solid var(--line); }
+    .equipo-header { margin-bottom: 56px; display: flex; align-items: flex-end; gap: 60px; }
+    .equipo-header p { font-size: 14px; line-height: 1.75; color: var(--gray); font-weight: 200; padding-bottom: 4px; }
+    .equipo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+    .miembro-card { position: relative; overflow: hidden; aspect-ratio: 3/4; background: #e8e4d8; }
+    .miembro-card img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(20%); transition: transform .7s ease, filter .4s; }
+    .miembro-card:hover img { transform: scale(1.04); filter: grayscale(0%); }
+    .miembro-overlay {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 40px 28px 28px;
+      background: linear-gradient(to top, rgba(27,27,27,.85) 0%, transparent 100%);
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .miembro-nombre { font-size: 18px; font-weight: 600; color: var(--cream); letter-spacing: -0.2px; }
+    .miembro-rol { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(247,244,235,.55); font-weight: 400; }
+    .miembro-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #e0dcd0; }
+    .miembro-placeholder svg { width: 64px; height: 64px; opacity: .25; }
+
+    /* CTA */
+    .cta-section { display: grid; grid-template-columns: 1fr 1fr; min-height: 440px; }
+    .cta-img {
+      background-image: url('/wp-content/uploads/2025/02/Home_Interior_Design-What_We_Do_Pic.jpeg');
+      background-size: cover; background-position: center; min-height: 300px;
+    }
+    .cta-body { background: var(--black); padding: 72px 60px; display: flex; flex-direction: column; justify-content: space-between; }
+    .cta-tagline { font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(247,244,235,.35); }
+    .cta-title { font-size: clamp(22px, 3.5vw, 44px); font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; color: var(--cream); }
+    .cta-desc { font-size: 14px; line-height: 1.75; color: rgba(247,244,235,.5); font-weight: 200; }
+    .cta-btn {
+      display: inline-block; border: 1px solid rgba(247,244,235,.5); color: var(--cream);
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; padding: 14px 28px;
+      font-family: var(--font); font-weight: 400; text-decoration: none; border-radius: 50px;
+      width: fit-content; transition: background .25s, color .25s, border-color .25s;
+    }
+    .cta-btn:hover { background: var(--cream); color: var(--black); border-color: var(--cream); }
+
+    /* FOOTER */
+    .site-footer {
+      border-top: 1px solid var(--line); padding: 28px var(--side);
+      display: flex; align-items: center; justify-content: space-between; background: var(--cream);
+    }
+    .footer-logo img { height: 45px; width: auto; opacity: .65; }
+    .footer-nav ul { list-style: none; display: flex; gap: 28px; }
+    .footer-nav a { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: var(--gray); font-weight: 400; transition: color .2s; }
+    .footer-nav a:hover { color: var(--black); }
+    .footer-copy { font-size: 10px; color: #aaa; font-weight: 300; }
+
+    /* ── RESPONSIVE ───────────────────────────── */
+
+    /* Tablet: hasta 1200px — aparece el menú hamburguesa ANTES de que se rompa */
+    @media (max-width: 1200px) {
+      :root { --side: clamp(16px, 5vw, 80px); }
+      /* Mostrar menú hamburguesa */
+      .site-nav { display: none; }
+      .nav-burger { display: flex; }
+      
+      .cifras-section { grid-template-columns: repeat(2, 1fr); gap: 48px 0; }
+      .cifra-item:nth-child(2) { border-right: none; }
+      .cifra-item:nth-child(3) { border-right: 1px solid var(--line); padding-left: 0; }
+      .valores-grid { grid-template-columns: repeat(2, 1fr); }
+      .valor-item:nth-child(-n+3) { border-top: 1px solid var(--line); }
+      .valor-item:nth-child(-n+2) { border-top: none; }
+      .valor-item:nth-child(2n) { border-right: none; }
+      .valor-item:nth-child(3n) { border-right: 1px solid var(--line); }
+      .historia-body { padding: 60px 40px; }
+    }
+
+    /* Móvil: hasta 768px */
+    @media (max-width: 768px) {
+      :root { --side: 20px; }
+
+      /* Hero: una sola columna, título más compacto */
+      .page-hero {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 40px var(--side) 36px;
+      }
+      .hero-intro { max-width: 100%; font-size: 15px; }
+
+      /* Historia */
+      .historia-section { grid-template-columns: 1fr; }
+      .historia-img { min-height: 260px; }
+      .historia-body { padding: 36px var(--side); }
+
+      /* Cifras: 2 columnas */
+      .cifras-section { grid-template-columns: repeat(2, 1fr); padding: 48px var(--side); gap: 40px 0; }
+      .cifra-item { padding: 0 16px; }
+      .cifra-item:first-child { padding-left: 0; }
+      .cifra-item:nth-child(2) { border-right: none; }
+      .cifra-item:nth-child(3) { border-right: 1px solid var(--line); padding-left: 0; }
+      .cifra-item:nth-child(4) { border-right: none; }
+
+      /* Valores */
+      .valores-section { padding: 48px var(--side); }
+      .valores-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .valores-header p { text-align: left; max-width: 100%; }
+      .valores-grid { grid-template-columns: 1fr; }
+      .valor-item { padding: 28px 0; border-right: none; }
+      .valor-item:nth-child(-n+3) { border-top: 1px solid var(--line); }
+      .valor-item:first-child { border-top: none; }
+
+      /* Equipo */
+      .equipo-section { padding: 48px var(--side); }
+      .equipo-header { flex-direction: column; gap: 12px; }
+      .equipo-grid { grid-template-columns: 1fr 1fr; }
+
+      /* CTA */
+      .cta-section { grid-template-columns: 1fr; }
+      .cta-img { min-height: 220px; }
+      .cta-body { padding: 40px var(--side); }
+
+      /* Footer */
+      .site-footer { flex-direction: column; gap: 18px; text-align: center; }
+      .footer-nav ul { justify-content: center; }
+    }
+
+    /* Móvil pequeño: hasta 480px */
+    @media (max-width: 480px) {
+      .header-logo img { height: 60px; }
+
+      /* Título hero aún más pequeño en pantallas muy estrechas */
+      .hero-title { font-size: clamp(18px, 9vw, 36px) !important; line-height: 1.05; }
+
+      .valor-item { padding: 24px 0; }
+      .equipo-grid { grid-template-columns: 1fr; }
+      .cifra-num { letter-spacing: -1px; }
+    }
+
+    /* Móvil muy pequeño: hasta 360px */
+    @media (max-width: 360px) {
+      .hero-title { font-size: clamp(16px, 10vw, 32px) !important; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-logo">
+    <a href="home-signum"><img src="/wp-content/uploads/2024/09/LOGO-SIGNUM.png" alt="Signum Projects"></a>
+  </div>
+  <nav class="site-nav">
+    <ul>
+      <li><a href="home-signum">Home</a></li>
+      <li><a href="/conocenos" class="active">Conócenos</a></li>
+      <li><a href="/proyectos">Proyectos</a></li>
+      <li><a href="/contact">Contacto</a></li>
+    </ul>
+  </nav>
+  <button class="nav-burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home-signum">Home</a>
+  <a href="/conocenos">Conócenos</a>
+  <a href="/proyectos">Proyectos</a>
+  <a href="/contact">Contacto</a>
+</div>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div>
+    <p class="hero-eyebrow">Quiénes somos</p>
+    <h1 class="hero-title">Diseñamos<br><em>espacios</em><br>que perduran</h1>
+  </div>
+  <p class="hero-intro">Signum Projects es un estudio de diseño e interiorismo especializado en hoteles, restaurantes y espacios comerciales. Transformamos visiones en entornos que comunican, emocionan y perduran en el tiempo.</p>
+</section>
+
+<!-- MARQUEE -->
+<div class="hero-marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-item">
+      <span class="marquee-word">Compromiso</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Efectividad</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Creatividad</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Ilusión</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Diseño</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Excelencia</span><span class="marquee-sep"></span>
+    </div>
+    <div class="marquee-item" aria-hidden="true">
+      <span class="marquee-word">Compromiso</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Efectividad</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Creatividad</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Ilusión</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Diseño</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Excelencia</span><span class="marquee-sep"></span>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORIA -->
+<section class="historia-section">
+  <div class="historia-img">
+    <img src="/wp-content/uploads/2026/06/Zuma-madrid3.jpg" alt="Proyecto Signum">
+  </div>
+  <div class="historia-body">
+    <p class="section-eyebrow">Nuestra historia</p>
+    <h2 class="section-title">Más de una década construyendo experiencias</h2>
+    <p class="section-body">Signum Projects nació de la convicción de que cada espacio tiene el potencial de contar una historia. Desde nuestros inicios, hemos trabajado junto a algunos de los nombres más relevantes de la hostelería y el mundo empresarial, aportando rigor, creatividad y una visión integral del proceso constructivo.</p>
+    <p class="section-body">Nuestra metodología combina el pensamiento estratégico con la ejecución artesanal. Cada proyecto comienza con una escucha profunda del cliente y termina con un espacio que supera sus expectativas.</p>
+  </div>
+</section>
+
+<!-- CIFRAS -->
+<section class="cifras-section">
+  <div class="cifra-item">
+    <span class="cifra-num">+100</span>
+    <span class="cifra-label">Proyectos completados</span>
+    <span class="cifra-desc">Hoteles, restaurantes, stands y espacios comerciales en toda España.</span>
+  </div>
+  <div class="cifra-item">
+    <span class="cifra-num">+20</span>
+    <span class="cifra-label">Años de experiencia</span>
+    <span class="cifra-desc">Una trayectoria consolidada en el sector.</span>
+  </div>
+  <div class="cifra-item">
+    <span class="cifra-num">100%</span>
+    <span class="cifra-label">Satisfacción garantizada</span>
+    <span class="cifra-desc">Compromiso total con el resultado final de cada proyecto.</span>
+  </div>
+  <div class="cifra-item">
+    <span class="cifra-num">3</span>
+    <span class="cifra-label">Sectores especializados</span>
+    <span class="cifra-desc">Construcción, Rotulación y Stands.</span>
+  </div>
+</section>
+
+<!-- VALORES -->
+<section class="valores-section">
+  <div class="valores-header">
+    <h2 class="section-title">Lo que nos<br>define</h2>
+    <p>Trabajamos con una serie de principios que guían cada decisión, desde el primer boceto hasta la entrega final del proyecto.</p>
+  </div>
+  <div class="valores-grid">
+    <div class="valor-item">
+      <span class="valor-num">01</span>
+      <h3 class="valor-title">Compromiso</h3>
+      <p class="valor-desc">Nos implicamos en cada proyecto como si fuera el nuestro. El resultado final no es solo un espacio, es una promesa cumplida.</p>
+    </div>
+    <div class="valor-item">
+      <span class="valor-num">02</span>
+      <h3 class="valor-title">Efectividad</h3>
+      <p class="valor-desc">Gestionamos plazos, presupuestos y equipos con la máxima eficiencia. El rigor en el proceso es la base de resultados excepcionales.</p>
+    </div>
+    <div class="valor-item">
+      <span class="valor-num">03</span>
+      <h3 class="valor-title">Creatividad</h3>
+      <p class="valor-desc">Cada espacio merece una solución única. Buscamos la originalidad sin perder de vista la funcionalidad y la coherencia estética.</p>
+    </div>
+    <div class="valor-item">
+      <span class="valor-num">04</span>
+      <h3 class="valor-title">Transparencia</h3>
+      <p class="valor-desc">El cliente siempre sabe en qué punto está su proyecto. Apostamos por la comunicación clara en todas las etapas del proceso.</p>
+    </div>
+    <div class="valor-item">
+      <span class="valor-num">05</span>
+      <h3 class="valor-title">Ilusión</h3>
+      <p class="valor-desc">Empezamos cada proyecto con la misma energía y entusiasmo. Esa ilusión es lo que transforma un buen proyecto en uno memorable.</p>
+    </div>
+    <div class="valor-item">
+      <span class="valor-num">06</span>
+      <h3 class="valor-title">Excelencia</h3>
+      <p class="valor-desc">Seleccionamos los mejores materiales, proveedores y colaboradores. No hacemos concesiones cuando se trata de calidad.</p>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPO -->
+<!-- <section class="equipo-section">
+  <div class="equipo-header">
+    <h2 class="section-title">El equipo</h2>
+    <p>Un grupo de profesionales con experiencia, diseño de interiores, dirección de obra y gestión de proyectos. Unidos por la misma pasión.</p>
+  </div>
+  <div class="equipo-grid">
+    <div class="miembro-card">
+      <div class="miembro-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="miembro-overlay">
+        <span class="miembro-nombre">Equipo de obra</span>
+        <span class="miembro-rol">Diseño & Concepto</span>
+      </div>
+    </div>
+    <div class="miembro-card">
+      <div class="miembro-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="miembro-overlay">
+        <span class="miembro-nombre">Rotulación</span>
+        <span class="miembro-rol">Diseño y montaje</span>
+      </div>
+    </div>
+    <div class="miembro-card">
+      <div class="miembro-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div class="miembro-overlay">
+        <span class="miembro-nombre">Equipo de Stands</span>
+        <span class="miembro-rol">Coordinación & Plazos</span>
+      </div>
+    </div>
+  </div>
+</section> -->
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-img" role="img" aria-label="Proyecto Signum Projects"></div>
+  <div class="cta-body">
+    <p class="cta-tagline">Empecemos a trabajar juntos</p>
+    <h2 class="cta-title">¿Tienes un proyecto en mente?</h2>
+    <p class="cta-desc">Cuéntanos tu idea. Nuestro equipo estudiará tu proyecto y te propondrá la mejor solución, ajustada a tu visión y tu presupuesto.</p>
+    <a href="/contact" class="cta-btn">Contactar</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-logo">
+    <a href="home-signum"><img src="/wp-content/uploads/2024/05/logo_x1.png" alt="Signum Projects"></a>
+  </div>
+  <nav class="footer-nav">
+    <ul>
+      <li><a href="/conocenos">Conócenos</a></li>
+      <li><a href="/proyectos">Proyectos</a></li>
+      <li><a href="/contact">Contacto</a></li>
+    </ul>
+  </nav>
+  <p class="footer-copy">© 2025 Signum Projects. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  const burger = document.getElementById('burger');
+  const menu   = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

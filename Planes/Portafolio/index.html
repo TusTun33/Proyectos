@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Portafolio Profesional</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Mi Portafolio</h1>
+            <!-- Botón para el modo oscuro -->
+            <button id="theme-toggle" aria-label="Cambiar modo oscuro/claro">🌙</button>
+        </nav>
+        <!-- Aquí irá el saludo dinámico -->
+        <h2 id="dynamic-greeting">¡Hola, visitante!</h2>
+        <p>Bienvenido a mi espacio de desarrollo web.</p>
+    </header>
+
+       <main>
+        <section id="projects">
+            <h3>Mis Proyectos</h3>
+            <!-- Este div está vacío. JavaScript lo llenará con las tarjetas -->
+            <div id="projects-container" class="projects-grid"></div>
+        </section>
+<!-- --------------------------------------------------------------------------- -->
+                <section id="github-repos">
+            <h3>Mis Repositorios en GitHub</h3>
+            <p>Estos son algunos de mis proyectos públicos. Puedes ver más en 
+                <a href="https://github.com/tu-usuario" target="_blank" id="github-profile-link">mi perfil de GitHub</a>.
+            </p>
+            
+            <!-- Contenedor donde se pintarán los repos -->
+            <div id="repos-container" class="repos-grid"></div>
+            
+            <!-- Mensaje de carga -->
+            <div id="loading-message" style="display: none;">
+                Cargando repositorios...
+            </div>
+            
+            <!-- Mensaje de error -->
+            <div id="error-message" class="error-box" style="display: none;">
+                No se pudieron cargar los repositorios. Por favor, intenta más tarde.
+            </div>
+        </section>
+        
+<!-- --------------------------------------------------------------------------- -->
+                <section id="contact">
+            <h3>Contáctame</h3>
+            <p>¿Tienes un proyecto en mente? ¡Hablemos!</p>
+            
+            <form id="contact-form" novalidate>
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" name="name" placeholder="Tu nombre">
+                    <small class="error-message" id="name-error"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="tu@email.com">
+                    <small class="error-message" id="email-error"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Mensaje</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Cuéntame sobre tu proyecto..."></textarea>
+                    <small class="error-message" id="message-error"></small>
+                </div>
+
+                <button type="submit" id="submit-btn">Enviar Mensaje</button>
+            </form>
+            <!-- Mensaje de éxito oculto por defecto -->
+            <div id="success-message" class="success-box" style="display: none;">
+                ¡Mensaje enviado con éxito! Me pondré en contacto contigo pronto. 🚀
+            </div>
+        </section>
+    </main>
+
+    <!-- Cargamos el script al final -->
+    <script src="script.js"></script>
+</body>
+</html>

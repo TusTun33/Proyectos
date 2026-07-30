@@ -1,0 +1,702 @@
+<?php
+/**
+ * Template Name: Página de Proyectos
+ * Template Post Type: page
+ */
+
+// ═══════════════════════════════════════════════════════════════
+// OBTENER PROYECTOS DESDE WORDPRESS
+// ═══════════════════════════════════════════════════════════════
+
+// Obtener todas las categorías de proyectos
+$categorias = get_terms(array(
+    'taxonomy'   => 'tipo_proyecto',
+    'hide_empty' => false,
+    'orderby'    => 'slug',
+    'order'      => 'ASC'
+));
+
+// Array que alimentará el JavaScript
+$gallery_data = array();
+
+foreach ($categorias as $categoria) {
+    // Obtener todos los proyectos de esta categoría
+    $proyectos = new WP_Query(array(
+        'post_type'      => 'proyectos',
+        'posts_per_page' => -1,
+        'tax_query'      => array(
+            array(
+                'taxonomy' => 'tipo_proyecto',
+                'field'    => 'slug',
+                'terms'    => $categoria->slug
+            )
+        ),
+        'orderby'        => 'date',
+        'order'          => 'DESC'
+    ));
+
+    $grupos = array();
+
+    if ($proyectos->have_posts()) {
+        while ($proyectos->have_posts()) {
+            $proyectos->the_post();
+            $proyecto_id = get_the_ID();
+
+            // Obtener las imágenes de ACF
+            $fotos = array();
+            for ($i = 1; $i <= 5; $i++) {
+                $imagen_url = get_field('imagen_' . $i, $proyecto_id);
+                $etiqueta = get_field('etiqueta_imagen_' . $i, $proyecto_id);
+
+                // Solo añadir si la imagen existe
+                if (!empty($imagen_url)) {
+                    $fotos[] = array(
+                        'src'   => $imagen_url,
+                        'label' => !empty($etiqueta) ? $etiqueta : ''
+                    );
+                }
+            }
+
+            // Solo añadir el grupo si tiene al menos una foto
+            if (!empty($fotos)) {
+                $grupos[] = array(
+                    'label' => get_the_title(),
+                    'fotos' => $fotos
+                );
+            }
+        }
+        wp_reset_postdata();
+    }
+
+    // Solo añadir la categoría si tiene proyectos
+    if (!empty($grupos)) {
+        $gallery_data[] = array(
+            'cat'    => $categoria->slug,
+            'grupos' => $grupos
+        );
+    }
+}
+
+// Convertir a JSON para JavaScript
+$gallery_json = json_encode($gallery_data);
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proyectos – Signum Projects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --black:  #1B1B1B;
+      --cream:  #F7F4EB;
+      --gray:   #595853;
+      --line:   #D8D4C8;
+      --font:   'Epilogue', sans-serif;
+      --side:   clamp(20px, 7vw, 140px);
+      --nav-h:  100px;
+      --tabs-h: 56px;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--cream);
+      color: var(--black);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+     .site-header {
+      position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid var(--line);
+      height: 100px; display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0;
+      background: rgba(247, 244, 235, 0.842);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      width: 100vw !important;
+      margin-left: calc(-50vw + 50%) !important;
+      margin-right: calc(-50vw + 50%) !important;
+      max-width: 100% !important;
+    }
+
+    .header-logo img { height: 80px; width: auto; display: block; margin: 24px var(--side);}
+
+    /* nav de escritorio */
+    .site-nav ul { list-style: none; display: flex; gap: 36px; }
+    .site-nav a {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      text-decoration: none; color: var(--gray); font-weight: 400; transition: color .2s;
+      white-space: nowrap;
+    }
+    .site-nav a:hover, .site-nav a.active { color: var(--black); }
+    .nav-burger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none;
+      padding: 4px; margin-right: var(--side);
+    }
+    .nav-burger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--black); transition: transform .3s, opacity .3s;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* menú móvil */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      background: rgba(247, 244, 235, 0.98);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      z-index: 199;
+      padding: 24px var(--side);
+      flex-direction: column;
+      gap: 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;
+      text-decoration: none; color: var(--gray); font-weight: 400;
+    }
+
+    /* ── PANTALLA HOME ── */
+    #screen-home {
+      position: fixed; inset: 0; background: var(--cream);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 150; transition: opacity .7s ease, transform .7s ease;
+      padding-top: var(--nav-h);
+    }
+    #screen-home.hidden { opacity: 0; pointer-events: none; transform: translateY(-40px); }
+
+    .home-label { font-size: 9px; letter-spacing: 0.42em; text-transform: uppercase; color: #aaa; margin-bottom: 28px; }
+    
+    /* TÍTULO CON MAYOR ESPECIFICIDAD PARA WORDPRESS */
+    #screen-home .home-title,
+    body #screen-home .home-title,
+    .home-title {
+      font-size: clamp(38px, 6vw, 70px) !important;
+      font-weight: 700 !important;
+      letter-spacing: -2px !important;
+      line-height: 1 !important;
+      text-align: center !important;
+      color: var(--black) !important;
+      margin-bottom: 16px !important;
+    }
+    
+    .home-subtitle {
+      font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gray); font-weight: 300; margin-bottom: 64px;
+    }
+    .home-arrow-btn {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      cursor: pointer; background: none; border: none; font-family: var(--font);
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .home-arrow-btn span { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gray); }
+    .home-arrow-btn svg { width: 48px; height: 64px; transition: transform .3s; }
+    .home-arrow-btn:hover svg { transform: translateY(6px); }
+    .home-arrow-btn polygon { fill: var(--black); }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+
+    .home-preview {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      display: flex; height: 100px; overflow: hidden;
+    }
+    .home-preview-item { flex: 1; overflow: hidden; position: relative; }
+    .home-preview-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(60%); opacity: 0.5; }
+    .home-preview-item::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, var(--cream) 0%, transparent 100%);
+    }
+
+    /* ── PANTALLA PROYECTOS ── */
+    #screen-projects {
+      padding-top: var(--nav-h);
+      min-height: 100vh;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+      pointer-events: none;
+    }
+    #screen-projects.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+    /* ══════════════════════════════════════════
+       TABS
+       sticky justo bajo el header fijo.
+       z-index: 199 para que el menú móvil (z:199
+       pero renderizado encima en DOM) lo tape.
+    ══════════════════════════════════════════ */
+    .cat-tabs {
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 99;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      padding: 0 var(--side);
+      height: var(--tabs-h);
+      gap: 0;
+      background: rgba(247, 244, 235, 0.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .cat-tab {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 28px 0 0; margin-right: 28px;
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      font-weight: 400; color: var(--gray); cursor: pointer;
+      border: none; background: none; font-family: var(--font);
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+      white-space: nowrap; position: relative; bottom: -1px;
+    }
+    .cat-tab:hover { color: var(--black); }
+    .cat-tab.active { color: var(--black); border-bottom-color: var(--black); font-weight: 500; }
+    .cat-tab-num { font-size: 8px; letter-spacing: 0.2em; color: #bbb; font-weight: 400; }
+    .cat-tab.active .cat-tab-num { color: var(--gray); }
+
+    /* ── PANELES ── */
+    .cat-panel { display: none; padding: 0 var(--side) 80px; }
+    .cat-panel.active { display: block; }
+
+    .cat-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 40px; padding: 40px 0 32px;
+      border-bottom: 1px solid var(--line); margin-bottom: 56px;
+    }
+    .cat-header-left { display: flex; flex-direction: column; gap: 8px; }
+    .cat-eyebrow { font-size: 9px; letter-spacing: 0.38em; text-transform: uppercase; color: #aaa; font-weight: 400; }
+    .cat-title { font-size: clamp(28px, 4vw, 48px); font-weight: 700; letter-spacing: -1px; line-height: 1; color: var(--black); }
+    .cat-desc { max-width: 400px; font-size: 13px; line-height: 1.75; color: var(--gray); font-weight: 200; text-align: right; }
+
+    /* ── GRUPOS ── */
+    .gallery-group { margin-bottom: 72px; }
+    .gallery-group:last-child { margin-bottom: 0; }
+    .group-separator { display: flex; align-items: center; gap: 20px; margin-bottom: 28px; }
+    .group-label { font-size: 9px; letter-spacing: 0.38em; text-transform: uppercase; color: #aaa; font-weight: 400; white-space: nowrap; flex-shrink: 0; }
+    .group-line { flex: 1; height: 1px; background: var(--line); }
+
+    /* ── GRIDS DE FOTOS ── */
+    .photo-grid { display: grid; gap: 8px; }
+    .photo-grid.layout-1 { grid-template-columns: 1fr; }
+    .photo-grid.layout-1 .photo-cell { aspect-ratio: 16/7; }
+    .photo-grid.layout-2 { grid-template-columns: 1.4fr 1fr; }
+    .photo-grid.layout-2 .photo-cell { aspect-ratio: 4/3; }
+    .photo-grid.layout-3 { grid-template-columns: 1.4fr 1fr; grid-template-rows: auto auto; }
+    .photo-grid.layout-3 .photo-cell:first-child { grid-row: 1 / 3; aspect-ratio: unset; min-height: 400px; }
+    .photo-grid.layout-3 .photo-cell:not(:first-child) { aspect-ratio: 4/3; }
+    .photo-grid.layout-4 { grid-template-columns: 1fr 1fr; }
+    .photo-grid.layout-4 .photo-cell { aspect-ratio: 4/3; }
+    .photo-grid.layout-5 { grid-template-columns: 1.4fr 1fr; grid-template-rows: auto auto auto; }
+    .photo-grid.layout-5 .photo-cell:first-child { grid-row: 1 / 3; aspect-ratio: unset; min-height: 400px; }
+    .photo-grid.layout-5 .photo-cell:not(:first-child) { aspect-ratio: 4/3; }
+
+    .photo-cell { overflow: hidden; position: relative; background: #e0dcd0; }
+    .photo-cell img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .8s ease; }
+    .photo-cell:hover img { transform: scale(1.04); }
+    .photo-label {
+      position: absolute; bottom: 14px; left: 14px;
+      background: var(--cream); border: 0.5px solid var(--line);
+      font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+      padding: 4px 10px; color: var(--gray); font-weight: 400;
+    }
+    .photo-placeholder {
+      width: 100%; height: 100%; min-height: 200px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 10px; background: #e8e4d8;
+    }
+    .photo-placeholder svg { width: 28px; height: 28px; opacity: .25; }
+    .photo-placeholder span { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #bbb; font-weight: 400; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(27,27,27,.95);
+      display: none; align-items: center; justify-content: center; padding: 40px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 100%; max-height: 90vh; object-fit: contain; display: block; }
+    .lightbox-close {
+      position: absolute; top: 24px; right: 32px;
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(247,244,235,.6); background: none; border: none;
+      font-family: var(--font); cursor: pointer;
+      display: flex; align-items: center; gap: 8px; transition: color .2s;
+    }
+    .lightbox-close:hover { color: var(--cream); }
+    .lightbox-close svg { width: 16px; height: 16px; }
+    .lightbox-caption {
+      position: absolute; bottom: 28px; left: 0; right: 0; text-align: center;
+      font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(247,244,235,.4); font-weight: 300;
+    }
+    .lightbox-prev, .lightbox-next {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      padding: 16px; color: rgba(247,244,235,.5); transition: color .2s;
+    }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+    .lightbox-prev:hover, .lightbox-next:hover { color: var(--cream); }
+    .lightbox-prev svg, .lightbox-next svg { width: 24px; height: 24px; }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════ */
+
+    /* Tablet grande — el nav empieza a apretarse */
+    @media (max-width: 1024px) {
+      :root { --side: clamp(16px, 5vw, 60px); }
+      .photo-grid.layout-3 .photo-cell:first-child,
+      .photo-grid.layout-5 .photo-cell:first-child { min-height: 300px; }
+    }
+    @media (max-width: 860px) {
+      .site-nav { display: none; }
+      .nav-burger { display: flex; }
+    }
+
+    @media (max-width: 768px) {
+      :root { --side: 20px; --nav-h: 80px; }
+      .header-logo img { height: 60px; }
+      .home-preview { height: 70px; }
+
+      .cat-tabs { overflow-x: auto; scrollbar-width: none; }
+      .cat-tabs::-webkit-scrollbar { display: none; }
+      .cat-tab { padding: 0 20px 0 0; margin-right: 20px; font-size: 9px; }
+
+      .cat-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .cat-desc { text-align: left; max-width: 100%; }
+
+      .photo-grid.layout-2,
+      .photo-grid.layout-3,
+      .photo-grid.layout-4,
+      .photo-grid.layout-5 { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .photo-grid .photo-cell { aspect-ratio: 4/3 !important; min-height: unset !important; }
+      .photo-grid.layout-3 .photo-cell:first-child,
+      .photo-grid.layout-5 .photo-cell:first-child { grid-row: auto; }
+      .photo-grid.layout-1 .photo-cell { aspect-ratio: 16/9; }
+      .gallery-group { margin-bottom: 48px; }
+      
+      /* TÍTULO EN MÓVILES CON !important */
+      #screen-home .home-title,
+      .home-title {
+        font-size: clamp(24px, 4vw, 50px) !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      :root { --nav-h: 70px; }
+      .header-logo img { height: 50px; }
+      
+      /* TÍTULO EN MÓVILES PEQUEÑOS CON !important */
+      #screen-home .home-title,
+      .home-title {
+        font-size: 24px !important;
+        letter-spacing: -1px !important;
+      }
+      
+      .cat-title { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Imagen ampliada">
+  <button class="lightbox-close" id="lb-close" aria-label="Cerrar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    Cerrar
+  </button>
+  <button class="lightbox-prev" id="lb-prev" aria-label="Anterior">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <img id="lb-img" src="" alt="">
+  <button class="lightbox-next" id="lb-next" aria-label="Siguiente">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <p class="lightbox-caption" id="lb-caption"></p>
+</div>
+
+<!-- ═══ HEADER ══════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-logo">
+    <a href="<?php echo home_url(); ?>">
+      <img src="/wp-content/uploads/2024/09/LOGO-SIGNUM.png" alt="Signum Projects">
+    </a>
+  </div>
+  <nav class="site-nav" id="siteNav">
+    <ul>
+      <li><a href="<?php echo home_url(); ?>">Home</a></li>
+      <li><a href="<?php echo home_url('/conocenos'); ?>">Conócenos</a></li>
+      <li><a href="<?php echo home_url('/proyectos'); ?>" class="active">Proyectos</a></li>
+      <li><a href="<?php echo home_url('/contact'); ?>">Contacto</a></li>
+    </ul>
+  </nav>
+  <button class="nav-burger" id="burger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="<?php echo home_url(); ?>">Home</a>
+  <a href="<?php echo home_url('/conocenos'); ?>">Conócenos</a>
+  <a href="<?php echo home_url('/proyectos'); ?>">Proyectos</a>
+  <a href="<?php echo home_url('/contact'); ?>">Contacto</a>
+</div>
+
+<!-- ═══ PANTALLA PRINCIPAL ═══════════════════════ -->
+<div id="screen-home">
+  <p class="home-label">Portafolio de proyectos</p>
+  <h1 class="home-title">Proyectos<br>seleccionados</h1>
+  <p class="home-subtitle">Construcción · Rotulación · Stands</p>
+  <button class="home-arrow-btn" id="btn-enter" aria-label="Ver proyectos">
+    <span>Explorar</span>
+    <svg viewBox="0 0 85.2 113" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="41.7,0 80.3,54.6 0,54.6 0,57.6 80.3,57.6 41.1,113 44.8,113 84,57.6 85.2,56.2 84,54.6 45.4,0"/>
+    </svg>
+  </button>
+  <div class="home-preview" id="home-preview"></div>
+</div>
+
+<!-- ═══ PANTALLA DE CATEGORÍAS ═══════════════════ -->
+<div id="screen-projects">
+
+  <div class="cat-tabs" role="tablist">
+    <button class="cat-tab active" data-cat="construccion" role="tab" aria-selected="true">
+      Construcción <span class="cat-tab-num" id="count-construccion"></span>
+    </button>
+    <button class="cat-tab" data-cat="rotulacion" role="tab" aria-selected="false">
+      Rotulación <span class="cat-tab-num" id="count-rotulacion"></span>
+    </button>
+    <button class="cat-tab" data-cat="stands" role="tab" aria-selected="false">
+      Stands <span class="cat-tab-num" id="count-stands"></span>
+    </button>
+  </div>
+
+  <div class="cat-panel active" id="panel-construccion" role="tabpanel">
+    <div class="cat-header">
+      <div class="cat-header-left">
+        <span class="cat-eyebrow">Categoría 01</span>
+        <h2 class="cat-title">Construcción</h2>
+      </div>
+      <p class="cat-desc">Dirección de obra integral para hoteles, restaurantes y espacios comerciales. Del boceto a la entrega, con total transparencia.</p>
+    </div>
+    <div id="gallery-construccion"></div>
+  </div>
+
+  <div class="cat-panel" id="panel-rotulacion" role="tabpanel">
+    <div class="cat-header">
+      <div class="cat-header-left">
+        <span class="cat-eyebrow">Categoría 02</span>
+        <h2 class="cat-title">Rotulación</h2>
+      </div>
+      <p class="cat-desc">Señalética, rótulos y elementos de identidad visual que comunican la marca con precisión en cada punto de contacto.</p>
+    </div>
+    <div id="gallery-rotulacion"></div>
+  </div>
+
+  <div class="cat-panel" id="panel-stands" role="tabpanel">
+    <div class="cat-header">
+      <div class="cat-header-left">
+        <span class="cat-eyebrow">Categoría 03</span>
+        <h2 class="cat-title">Stands</h2>
+      </div>
+      <p class="cat-desc">Diseño y montaje de stands para ferias y eventos. Presencia impactante y una identidad de marca que no pasa desapercibida.</p>
+    </div>
+    <div id="gallery-stands"></div>
+  </div>
+
+</div>
+
+<script>
+/* ════════════════════════════════════════════════
+   DATOS DESDE WORDPRESS
+════════════════════════════════════════════════ */
+const GALLERY_DATA = <?php echo $gallery_json; ?>;
+
+/* ── Render ── */
+function getLayout(n) {
+  if (n === 1) return 'layout-1';
+  if (n === 2) return 'layout-2';
+  if (n === 3) return 'layout-3';
+  if (n === 4) return 'layout-4';
+  return 'layout-5';
+}
+function placeholderHTML(label) {
+  return `<div class="photo-placeholder">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+      <rect x="3" y="3" width="18" height="18" rx="1"/>
+      <path d="m3 9 4-4 4 4 4-4 4 4"/><path d="M3 15h18"/>
+    </svg>
+    <span>${label || 'Próximamente'}</span>
+  </div>`;
+}
+const allPhotos = { construccion: [], rotulacion: [], stands: [] };
+function buildGallery(catData) {
+  const container = document.getElementById('gallery-' + catData.cat);
+  if (!container) return;
+  let html = '';
+  catData.grupos.forEach(grupo => {
+    const layout = getLayout(grupo.fotos.length);
+    html += `<div class="gallery-group">
+      <div class="group-separator">
+        <span class="group-label">${grupo.label}</span>
+        <span class="group-line"></span>
+      </div>
+      <div class="photo-grid ${layout}">`;
+    grupo.fotos.forEach(foto => {
+      if (foto.src) {
+        const lbIdx = allPhotos[catData.cat].length;
+        allPhotos[catData.cat].push({ src: foto.src, label: foto.label || '', group: grupo.label });
+        html += `<div class="photo-cell" data-cat="${catData.cat}" data-idx="${lbIdx}" style="cursor:pointer">
+          <img src="${foto.src}" alt="${foto.label}" loading="lazy">
+          ${foto.label ? `<span class="photo-label">${foto.label}</span>` : ''}
+        </div>`;
+      } else {
+        html += `<div class="photo-cell">${placeholderHTML(foto.label)}</div>`;
+      }
+    });
+    html += `</div></div>`;
+  });
+  container.innerHTML = html;
+  const count = allPhotos[catData.cat].length;
+  const el = document.getElementById('count-' + catData.cat);
+  if (el && count > 0) el.textContent = count;
+}
+GALLERY_DATA.forEach(buildGallery);
+
+/* ── Lightbox ── */
+const lightbox  = document.getElementById('lightbox');
+const lbImg     = document.getElementById('lb-img');
+const lbCaption = document.getElementById('lb-caption');
+let lbCat = null, lbIdx = 0;
+function openLightbox(cat, idx) {
+  lbCat = cat; lbIdx = idx;
+  const foto = allPhotos[cat][idx];
+  lbImg.src = foto.src; lbImg.alt = foto.label;
+  lbCaption.textContent = foto.label ? `${foto.group} — ${foto.label}` : foto.group;
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+  lbImg.src = '';
+}
+function moveLightbox(dir) {
+  lbIdx = (lbIdx + dir + allPhotos[lbCat].length) % allPhotos[lbCat].length;
+  const foto = allPhotos[lbCat][lbIdx];
+  lbImg.src = foto.src; lbImg.alt = foto.label;
+  lbCaption.textContent = foto.label ? `${foto.group} — ${foto.label}` : foto.group;
+}
+document.getElementById('lb-close').addEventListener('click', closeLightbox);
+document.getElementById('lb-prev').addEventListener('click', () => moveLightbox(-1));
+document.getElementById('lb-next').addEventListener('click', () => moveLightbox(1));
+lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') moveLightbox(-1);
+  if (e.key === 'ArrowRight') moveLightbox(1);
+});
+document.getElementById('screen-projects').addEventListener('click', e => {
+  const cell = e.target.closest('.photo-cell[data-idx]');
+  if (cell) openLightbox(cell.dataset.cat, parseInt(cell.dataset.idx));
+});
+
+/* ── Tabs ── */
+document.querySelectorAll('.cat-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const cat = tab.dataset.cat;
+    document.querySelectorAll('.cat-tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+    document.querySelectorAll('.cat-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    document.getElementById('panel-' + cat).classList.add('active');
+    document.getElementById('screen-projects').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+/* ── Preview home ── */
+function renderHomePreview() {
+  const covers = GALLERY_DATA.map(cat => {
+    const primera = cat.grupos.flatMap(g => g.fotos).find(f => f.src);
+    return primera ? primera.src : '';
+  }).filter(Boolean);
+  document.getElementById('home-preview').innerHTML = covers.map(src =>
+    `<div class="home-preview-item"><img src="${src}" alt="" loading="lazy"></div>`
+  ).join('');
+}
+renderHomePreview();
+
+/* ── Entrada ── */
+document.getElementById('btn-enter').addEventListener('click', () => {
+  document.getElementById('screen-home').classList.add('hidden');
+  document.getElementById('screen-projects').classList.add('visible');
+});
+
+/* ════════════════════════════════════════════════
+   FIX 5 — Burger adaptativo por JS
+   Mide si el nav cabe entre el logo y el borde
+   derecho con margen de seguridad. Si no cabe,
+   activa el burger aunque la media query aún no
+   haya disparado. Se ejecuta en resize y al cargar.
+════════════════════════════════════════════════ */
+const siteNav   = document.getElementById('siteNav');
+const burgerBtn = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+function checkNavFit() {
+  // Ocultar el nav temporalmente para medir disponibilidad
+  siteNav.style.visibility = 'hidden';
+  siteNav.style.display = 'flex';
+  const headerW = document.querySelector('.site-header').offsetWidth;
+  const logoW   = document.querySelector('.header-logo').offsetWidth;
+  const navW    = siteNav.offsetWidth;
+  const gap     = 48; // padding mínimo deseado entre logo y nav
+  siteNav.style.visibility = '';
+  siteNav.style.display = '';
+
+  const noFit = logoW + navW + gap * 3 > headerW;
+
+  if (noFit) {
+    siteNav.style.display = 'none';
+    burgerBtn.style.display = 'flex';
+  } else {
+    siteNav.style.display = '';
+    burgerBtn.style.display = '';
+    // cerrar menú móvil si vuelve a caber
+    mobileMenu.classList.remove('open');
+    burgerBtn.classList.remove('open');
+  }
+}
+
+window.addEventListener('resize', checkNavFit);
+checkNavFit(); // ejecutar al cargar
+
+/* ── Burger toggle ── */
+burgerBtn.addEventListener('click', () => {
+  burgerBtn.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+
+/* ── URL param ── */
+const params = new URLSearchParams(window.location.search);
+const paramCat = params.get('cat');
+if (paramCat && document.getElementById('panel-' + paramCat)) {
+  document.getElementById('screen-home').classList.add('hidden');
+  document.getElementById('screen-projects').classList.add('visible');
+  document.querySelector(`[data-cat="${paramCat}"]`)?.click();
+}
+</script>
+</body>
+</html>

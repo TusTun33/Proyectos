@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto – Signum Projects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    :root {
+      --black: #1B1B1B; --cream: #F7F4EB; --gray: #595853;
+      --line: #D8D4C8; --font: 'Epilogue', sans-serif;
+      --side: clamp(20px, 7vw, 140px);
+    }
+    body { font-family: var(--font); background: var(--cream); color: var(--black); font-weight: 300; overflow-x: hidden; margin: 30px;}
+
+    /* HEADER — APLICADAS SOLUCIONES WORDPRESS */
+    .site-header {
+      position: sticky; top: 0; z-index: 100; background: var(--cream);
+      border-bottom: 1px solid var(--line); height: 100px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0;
+      width: 100vw !important;
+      margin-left: calc(-50vw + 50%) !important;
+      margin-right: calc(-50vw + 50%) !important;
+      max-width: 100% !important;
+    }
+    .header-logo { padding-left: var(--side); }
+    .header-logo img { height: 100px; width: auto; display: block; }
+    .site-nav { padding-right: var(--side); }
+    .site-nav ul { list-style: none; display: flex; gap: 36px; white-space: nowrap; }
+    .site-nav a {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      text-decoration: none; color: var(--gray); font-weight: 400; transition: color .2s;
+      white-space: nowrap;
+    }
+    .site-nav a:hover, .site-nav a.active { color: var(--black); }
+    .nav-burger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none;
+      padding: 4px; margin-right: var(--side);
+    }
+    .nav-burger span { display: block; width: 22px; height: 1.5px; background: var(--black); transition: transform .3s, opacity .3s; }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; top: 100px; left: 0; right: 0;
+      background: var(--cream); border-bottom: 1px solid var(--line);
+      z-index: 99; padding: 24px var(--side); flex-direction: column; gap: 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; color: var(--gray); font-weight: 400; }
+
+    /* HERO — TÍTULO REDUCIDO 30% CON !IMPORTANT */
+    .page-hero {
+      padding: 80px var(--side) 0;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: end;
+    }
+    .hero-eyebrow { font-size: 9px; letter-spacing: 0.42em; text-transform: uppercase; color: #aaa; font-weight: 400; margin-bottom: 20px; }
+    .hero-title {
+      font-size: clamp(21px, 5vw, 60px) !important;
+      font-weight: 700;
+      letter-spacing: clamp(-0.5px, -0.02em, -2px);
+      line-height: 1.0;
+      color: var(--black);
+      word-break: break-word;
+    }
+    .hero-title em { font-style: italic; font-weight: 300; }
+    .hero-intro { font-size: 16px; line-height: 1.8; color: var(--gray); font-weight: 200; padding-bottom: 8px; }
+
+    /* BLOQUE PRINCIPAL CONTACTO */
+    .contact-main {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line); margin-top: 60px;
+    }
+
+    /* FORMULARIO */
+    .contact-form-wrap { padding: 72px var(--side) 80px 0; border-right: 1px solid var(--line); }
+    .form-eyebrow { font-size: 9px; letter-spacing: 0.42em; text-transform: uppercase; color: #aaa; font-weight: 400; margin-bottom: 40px; }
+
+    .form-group { margin-bottom: 32px; }
+    .form-group label {
+      display: block; font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gray); font-weight: 400; margin-bottom: 10px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%; background: transparent; border: none;
+      border-bottom: 1px solid var(--line); padding: 12px 0;
+      font-family: var(--font); font-size: 15px; font-weight: 300; color: var(--black);
+      outline: none; transition: border-color .2s; appearance: none; -webkit-appearance: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-bottom-color: var(--black); }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #bbb; font-weight: 200; }
+    .form-group textarea { resize: none; height: 100px; }
+
+    /* Campo error: borde rojo sutil sin romper estética */
+    .form-group input.error,
+    .form-group textarea.error { border-bottom-color: #c0392b; }
+    .form-group .field-error {
+      font-size: 10px; letter-spacing: 0.1em; color: #c0392b;
+      font-weight: 300; margin-top: 6px; display: none;
+    }
+    .form-group .field-error.visible { display: block; }
+
+    .tipo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .tipo-option { display: none; }
+    .tipo-option + label {
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px 8px; border: 1px solid var(--line); font-size: 10px;
+      letter-spacing: 0.18em; text-transform: uppercase; color: var(--gray);
+      font-weight: 400; cursor: pointer;
+      transition: border-color .2s, color .2s, background .2s; text-align: center;
+    }
+    .tipo-option:checked + label { border-color: var(--black); color: var(--black); background: rgba(27,27,27,.04); }
+    .tipo-option + label:hover { border-color: var(--gray); color: var(--black); }
+
+    .form-submit {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--black); color: var(--cream); border: none;
+      font-family: var(--font); font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; font-weight: 400; padding: 16px 32px;
+      cursor: pointer; border-radius: 50px; margin-top: 8px;
+      transition: opacity .2s, transform .2s;
+    }
+    .form-submit:hover { opacity: .85; transform: translateY(-1px); }
+    .form-submit:disabled { opacity: .4; cursor: default; transform: none; }
+    .form-submit svg { width: 14px; height: 14px; }
+
+    /* PANEL DERECHO — sin cambios */
+    .contact-info { padding: 72px 60px 80px; display: flex; flex-direction: column; justify-content: space-between; }
+    .info-block { display: flex; flex-direction: column; gap: 40px; }
+    .info-item { display: flex; flex-direction: column; gap: 8px; }
+    .info-label { font-size: 9px; letter-spacing: 0.38em; text-transform: uppercase; color: #aaa; font-weight: 400; }
+    .info-value { font-size: 15px; font-weight: 300; color: var(--black); line-height: 1.6; text-decoration: none; transition: color .2s; }
+    a.info-value:hover { color: var(--gray); }
+    .horario-grid { display: flex; flex-direction: column; gap: 6px; }
+    .horario-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+    .horario-dia { font-size: 12px; color: var(--gray); font-weight: 300; white-space: nowrap; }
+    .horario-hora { font-size: 12px; color: var(--black); font-weight: 400; }
+    .redes { display: flex; gap: 20px; flex-wrap: wrap; }
+    .red-link {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      text-decoration: none; color: var(--gray); font-weight: 400;
+      border-bottom: 1px solid var(--line); padding-bottom: 2px;
+      transition: color .2s, border-color .2s;
+    }
+    .red-link:hover { color: var(--black); border-color: var(--black); }
+    .contact-deco { overflow: hidden; margin-top: 15px; height: 200px; }
+    .contact-deco img { width: 100%; height: 50%; object-fit: cover; display: block; filter: grayscale(20%); transition: transform .8s ease; }
+    .contact-deco:hover img { transform: scale(1.04); }
+
+    /* FEEDBACK ENVÍO */
+    .form-feedback {
+      display: none; padding: 16px 20px;
+      background: rgba(27,27,27,.04); border: 1px solid var(--line);
+      font-size: 13px; color: var(--gray); font-weight: 300; margin-top: 24px;
+    }
+    .form-feedback.visible { display: block; }
+
+    /* SECCIÓN ENCUÉNTRANOS */
+    .map-header {
+      padding: 56px var(--side) 40px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    .map-header-left { display: flex; flex-direction: column; gap: 10px; }
+    .map-eyebrow {
+      font-size: 9px; letter-spacing: 0.42em; text-transform: uppercase;
+      color: #aaa; font-weight: 400;
+    }
+    .map-title {
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; color: var(--black);
+    }
+    .map-address {
+      font-size: 14px; color: var(--gray); font-weight: 200; line-height: 1.6;
+      max-width: 360px; text-align: right;
+    }
+
+    /* MAPA A ANCHO COMPLETO */
+    .map-section {
+      width: 100%;
+      height: 420px;
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      display: block;
+    }
+    .map-section iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      border-top: 1px solid var(--line); padding: 28px var(--side);
+      display: flex; align-items: center; justify-content: space-between; background: var(--cream);
+    }
+    .footer-logo img { height: 45px; width: auto; opacity: .65; }
+    .footer-nav ul { list-style: none; display: flex; gap: 28px; }
+    .footer-nav a { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: var(--gray); font-weight: 400; transition: color .2s; }
+    .footer-nav a:hover { color: var(--black); }
+    .footer-copy { font-size: 10px; color: #aaa; font-weight: 300; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1200px) {
+      :root { --side: clamp(16px, 5vw, 80px); }
+      /* Mostrar menú hamburguesa ANTES de que se rompa */
+      .site-nav { display: none; }
+      .nav-burger { display: flex; }
+      .contact-info { padding: 72px 40px 80px; }
+    }
+
+    @media (max-width: 768px) {
+      :root { --side: 20px; }
+      .page-hero { grid-template-columns: 1fr; gap: 24px; padding: 40px var(--side) 0; }
+      .hero-intro { font-size: 15px; }
+      .contact-main { grid-template-columns: 1fr; }
+      .contact-form-wrap { padding: 48px 0 56px; border-right: none; border-bottom: 1px solid var(--line); }
+      .contact-info { padding: 48px 0 56px; }
+      .tipo-grid { grid-template-columns: repeat(3, 1fr); }
+      .map-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+      .map-address { text-align: left; max-width: 100%; }
+      .map-section { height: 300px; }
+      .site-footer { flex-direction: column; gap: 18px; text-align: center; }
+      .footer-nav ul { justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+      .header-logo img { height: 60px; }
+      .tipo-grid { grid-template-columns: 1fr 1fr; }
+      .map-section { height: 240px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-logo">
+    <a href="home-signum"><img src="/wp-content/uploads/2024/09/LOGO-SIGNUM.png" alt="Signum Projects"></a>
+  </div>
+  <nav class="site-nav">
+    <ul>
+      <li><a href="home-signum">Home</a></li>
+      <li><a href="/conocenos">Conócenos</a></li>
+      <li><a href="/proyectos">Proyectos</a></li>
+      <li><a href="/contact" class="active">Contacto</a></li>
+    </ul>
+  </nav>
+  <button class="nav-burger" id="burger" aria-label="Menú"><span></span><span></span><span></span></button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home-signum">Home</a>
+  <a href="/conocenos">Conócenos</a>
+  <a href="/proyectos">Proyectos</a>
+  <a href="/contact">Contacto</a>
+</div>
+
+<section class="page-hero">
+  <div>
+    <p class="hero-eyebrow">Hablemos</p>
+    <h1 class="hero-title">Cuéntanos<br><em>tu proyecto</em></h1>
+  </div>
+  <p class="hero-intro">Nos encanta escuchar nuevas ideas. Comparte con nosotros tu proyecto y nuestro equipo te responderá con una propuesta ajustada a tu visión.</p>
+</section>
+
+<div class="contact-main">
+
+  <div class="contact-form-wrap">
+    <p class="form-eyebrow">Formulario de contacto</p>
+    <form id="contactForm" novalidate>
+
+      <input type="hidden" name="access_key" value="4751958c-7f0f-499f-8a39-33600a607756">
+      <input type="hidden" name="subject" value="Nuevo contacto desde Signum Projects">
+      <input type="hidden" name="from_name" value="Signum Projects Web">
+      <input type="checkbox" name="botcheck" style="display:none">
+
+      <div class="form-group">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+        <span class="field-error" id="err-nombre">Por favor, introduce tu nombre.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+        <span class="field-error" id="err-email">Introduce un email válido.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="empresa">Empresa (opcional)</label>
+        <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu empresa">
+      </div>
+
+      <div class="form-group">
+        <label>Tipo de proyecto</label>
+        <div class="tipo-grid">
+          <div><input type="checkbox" class="tipo-option" id="tipo-comercio" name="tipo_comercio" value="Comercio"><label for="tipo-comercio">Comercio</label></div>
+          <div><input type="checkbox" class="tipo-option" id="tipo-vinilo" name="tipo_vinilo" value="Vinilo"><label for="tipo-vinilo">Vinilo</label></div>
+          <div><input type="checkbox" class="tipo-option" id="tipo-stand" name="tipo_stand" value="Stand"><label for="tipo-stand">Stand</label></div>
+          <div><input type="checkbox" class="tipo-option" id="tipo-construccion" name="tipo_construccion" value="Construcción"><label for="tipo-construccion">Construcción</label></div>
+          <div><input type="checkbox" class="tipo-option" id="tipo-restaurante" name="tipo_restaurante" value="Restaurante"><label for="tipo-restaurante">Restaurante</label></div>
+          <div><input type="checkbox" class="tipo-option" id="tipo-otro" name="tipo_otro" value="Otro"><label for="tipo-otro">Otro</label></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mensaje">Cuéntanos tu proyecto</label>
+        <textarea id="mensaje" name="mensaje" placeholder="Describe brevemente qué tienes en mente..." required></textarea>
+        <span class="field-error" id="err-mensaje">Por favor, escribe tu mensaje.</span>
+      </div>
+
+      <button type="submit" class="form-submit" id="submitBtn">
+        Enviar mensaje
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <div class="form-feedback" id="formFeedback">
+        ✓ Mensaje enviado. Nos pondremos en contacto contigo.
+      </div>
+      <div class="form-feedback" id="formError" style="border-color:#c0392b; color:#c0392b;">
+        ✕ Ha ocurrido un error al enviar. Por favor, escríbenos directamente a gestion@signumprojects.com
+      </div>
+    </form>
+  </div>
+
+  <div class="contact-info">
+    <div class="info-block">
+      <div class="info-item">
+        <span class="info-label">Email</span>
+        <a href="mailto:gestion@signumprojects.com" class="info-value">gestion@signumprojects.com</a>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Teléfono</span>
+        <a href="tel:+34973197035" class="info-value">+34 973 19 70 35</a>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Dirección</span>
+        <span class="info-value">Polígon Industrial La Nora,<br>Carrer Segarra s/n, 25660 Lleida</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Horario de atención</span>
+        <div class="horario-grid">
+          <div class="horario-row">
+            <span class="horario-dia">Lunes – Viernes</span>
+            <span class="horario-hora">8:30 – 13:30 / 14:30 – 17:30</span>
+          </div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Redes sociales</span>
+        <div class="redes">
+          <a href="#" class="red-link">Instagram</a>
+          <a href="#" class="red-link">LinkedIn</a>
+          <a href="#" class="red-link">Houzz</a>
+        </div>
+      </div>
+    </div>
+    <div class="contact-deco">
+      <img src="/wp-content/uploads/2024/05/logo_x1.png" alt="Signum Projects">
+    </div>
+  </div>
+
+</div>
+
+<div class="map-header">
+  <div class="map-header-left">
+    <span class="map-eyebrow">Ubicación</span>
+    <h2 class="map-title">Encuéntranos</h2>
+  </div>
+  <p class="map-address">Polígon Industrial La Nora,<br>Carrer Segarra, s/n, 25660 Lleida</p>
+</div>
+
+<div class="map-section">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2169.7113767947662!2d0.6933831738690891!3d41.653953921421255!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xe84b9b43135746b%3A0x1bdbc3dfd480ee44!2sSignum%20Projects!5e0!3m2!1ses-419!2ses!4v1781097588380!5m2!1ses-419!2ses"
+    title="Ubicación Signum Projects"
+    allowfullscreen
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+  </iframe>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-logo">
+    <a href="home-signum"><img src="/wp-content/uploads/2024/05/logo_x1.png" alt="Signum Projects"></a>
+  </div>
+  <nav class="footer-nav">
+    <ul>
+      <li><a href="/conocenos">Conócenos</a></li>
+      <li><a href="/proyectos">Proyectos</a></li>
+      <li><a href="/contact">Contacto</a></li>
+    </ul>
+  </nav>
+  <p class="footer-copy">© 2025 Signum Projects. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  const burger = document.getElementById('burger');
+  const menu   = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+
+  const form       = document.getElementById('contactForm');
+  const submitBtn  = document.getElementById('submitBtn');
+  const feedback   = document.getElementById('formFeedback');
+  const errorBox   = document.getElementById('formError');
+
+  function validateField(input, errorId, condition) {
+    const errEl = document.getElementById(errorId);
+    if (!condition) {
+      input.classList.add('error');
+      errEl.classList.add('visible');
+      return false;
+    }
+    input.classList.remove('error');
+    errEl.classList.remove('visible');
+    return true;
+  }
+
+  document.getElementById('nombre').addEventListener('blur', function() {
+    validateField(this, 'err-nombre', this.value.trim().length >= 2);
+  });
+  document.getElementById('email').addEventListener('blur', function() {
+    validateField(this, 'err-email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim()));
+  });
+  document.getElementById('mensaje').addEventListener('blur', function() {
+    validateField(this, 'err-mensaje', this.value.trim().length >= 10);
+  });
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const nombre  = document.getElementById('nombre');
+    const email   = document.getElementById('email');
+    const mensaje = document.getElementById('mensaje');
+
+    const v1 = validateField(nombre,  'err-nombre',  nombre.value.trim().length >= 2);
+    const v2 = validateField(email,   'err-email',   /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim()));
+    const v3 = validateField(mensaje, 'err-mensaje', mensaje.value.trim().length >= 10);
+    if (!v1 || !v2 || !v3) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando…';
+
+    try {
+      const data = new FormData(form);
+      const res  = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: data
+      });
+      const json = await res.json();
+
+      if (json.success) {
+        feedback.classList.add('visible');
+        errorBox.classList.remove('visible');
+        form.reset();
+        submitBtn.style.display = 'none';
+      } else {
+        throw new Error(json.message || 'Error desconocido');
+      }
+    } catch (err) {
+      errorBox.classList.add('visible');
+      feedback.classList.remove('visible');
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Enviar mensaje <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+    }
+
+    window.scrollTo({ top: feedback.offsetTop - 40, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

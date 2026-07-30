@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Signum Projects – Hotels · Stands · Restaurants</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── RESET ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ── VARIABLES ──────────────────────────── */
+    :root {
+      --black:  #1B1B1B;
+      --cream:  #F7F4EB;
+      --gray:   #595853;
+      --line:   #D8D4C8;
+      --font:   'Epilogue', sans-serif;
+      --side:   clamp(20px, 7vw, 140px);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--cream);
+      color: var(--black);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ─────────────────────────────── */
+   .site-header {
+  position: sticky; 
+  top: 0; 
+  z-index: 100;
+  border-bottom: 1px solid var(--line); 
+  height: 100px;
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+  padding: 0;
+  background: rgba(247, 244, 235, 0.842);
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px);
+  width: 100vw !important;
+  margin-left: calc(-50vw + 50%) !important;
+  margin-right: calc(-50vw + 50%) !important;
+  max-width: 100% !important;
+    }
+    .header-logo { padding-left: var(--side); }
+    .header-logo img { height: 100px; width: auto; display: block; }
+    .site-nav { padding-right: var(--side); }
+    .site-nav ul { list-style: none; display: flex; gap: 36px; white-space: nowrap; }
+    .site-nav a {
+      font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+      text-decoration: none; color: var(--gray); font-weight: 400; transition: color .2s;
+      white-space: nowrap;
+    }
+    .site-nav a:hover, .site-nav a.active { color: var(--black); }
+
+    .nav-burger {
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none; padding: 4px;
+      margin-right: var(--side);
+    }
+    .nav-burger span {
+      display: block; width: 22px; height: 1.5px;
+      background: var(--black); transition: transform .3s, opacity .3s;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none; position: fixed; top: 100px; left: 0; right: 0;
+      background: var(--cream); border-bottom: 1px solid var(--line);
+      z-index: 99; padding: 24px var(--side); flex-direction: column; gap: 20px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase;
+      text-decoration: none; color: var(--gray); font-weight: 400;
+    }
+
+    /* ── MARQUEE ────────────────────────────── */
+    .hero-marquee { background: var(--black); overflow: hidden; padding: 15px 0; }
+    .marquee-track { display: flex; width: max-content; animation: scroll-left 20s linear infinite; }
+    .marquee-item { display: flex; align-items: center; gap: 36px; padding-right: 36px; white-space: nowrap; }
+    .marquee-word { font-size: 11px; font-weight: 300; letter-spacing: 0.32em; text-transform: uppercase; color: rgba(247,244,235,.7); }
+    .marquee-sep { width: 3px; height: 3px; border-radius: 50%; background: rgba(247,244,235,.25); flex-shrink: 0; }
+    @keyframes scroll-left { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ══════════════════════════════════════════
+       SERVICIOS — SECCIÓN PRINCIPAL
+    ══════════════════════════════════════════ */
+    .services-intro {
+      padding: 60px var(--side) 48px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 40px;
+      border-bottom: 1px solid var(--line);
+    }
+    .services-intro-title {
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      line-height: 0.95;
+      color: var(--black);
+    }
+    .services-intro-title em { font-style: italic; font-weight: 300; }
+    .services-intro-text {
+      max-width: 380px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--gray);
+      font-weight: 200;
+      padding-bottom: 4px;
+    }
+
+    /* ── GRID ASIMÉTRICO DE 3 SERVICIOS ─────── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr;
+      grid-template-rows: 580px;
+      border-bottom: 2px solid var(--black);
+    }
+
+    .service-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      border-right: 1px solid var(--line);
+    }
+    .service-card:last-child { border-right: none; }
+
+    /* imagen de fondo con parallax suave */
+    .service-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform .9s cubic-bezier(.16,1,.3,1), filter .5s;
+      will-change: transform;
+    }
+    .service-card:hover .service-card-bg {
+      transform: scale(1.06);
+      filter: brightness(.75);
+    }
+
+    /* overlay degradado siempre visible */
+    .service-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(27,27,27,.88) 0%,
+        rgba(27,27,27,.3) 50%,
+        transparent 100%
+      );
+      transition: opacity .4s;
+    }
+    .service-card:hover .service-card-overlay { opacity: .9; }
+
+    /* número flotante */
+    .service-card-num {
+      position: absolute;
+      top: 28px; left: 28px;
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(247,244,235,.5);
+      font-weight: 400;
+      z-index: 2;
+    }
+
+    /* contenido inferior */
+    .service-card-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 36px 32px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transform: translateY(0);
+      transition: transform .5s cubic-bezier(.16,1,.3,1);
+    }
+
+    .service-card-label {
+      font-size: 9px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: rgba(247,244,235,.5);
+      font-weight: 400;
+    }
+    .service-card-title {
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      color: var(--cream);
+    }
+    .service-card-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      color: rgba(247,244,235,.7);
+      font-weight: 200;
+      max-width: 280px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .4s .1s, transform .4s .1s;
+    }
+    .service-card:hover .service-card-desc {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* botón "Ver más" */
+    .service-card-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream);
+      font-weight: 500;
+      border-bottom: 1px solid rgba(247,244,235,.4);
+      padding-bottom: 2px;
+      width: fit-content;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity .4s .15s, transform .4s .15s, border-color .2s;
+    }
+    .service-card:hover .service-card-btn {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .service-card-btn svg { width: 12px; height: 12px; transition: transform .2s; }
+    .service-card:hover .service-card-btn svg { transform: translateX(3px); }
+
+    /* ══════════════════════════════════════════
+       PANEL "A FONDO" (DESPLEGABLE)
+    ══════════════════════════════════════════ */
+    .service-panel {
+      /* display:grid para transición de altura sin max-height fijo */
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows .7s cubic-bezier(.16,1,.3,1), opacity .5s;
+      border-bottom: 1px solid var(--line);
+    }
+    .service-panel.open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+    /* wrapper interno necesario para el truco grid 0fr→1fr */
+    .service-panel-inner {
+      overflow: hidden;
+      padding: 0;        /* sin padding aquí */
+    }
+    /* el padding real va en un div dentro */
+    .service-panel-body {
+      padding: 80px var(--side);
+    }
+
+    /* header del panel */
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 60px;
+      margin-bottom: 64px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-header-left { flex: 1; min-width: 0; }
+    .panel-eyebrow {
+      font-size: 9px; letter-spacing: 0.42em; text-transform: uppercase;
+      color: #aaa; font-weight: 400; margin-bottom: 16px;
+    }
+    .panel-title {
+      font-size: clamp(28px, 4vw, 52px);
+      font-weight: 700; letter-spacing: -1px; line-height: 1;
+      color: var(--black); margin-bottom: 0;
+    }
+    .panel-header-right {
+      max-width: 420px;
+      flex-shrink: 0;
+    }
+    .panel-intro {
+      font-size: 15px; line-height: 1.85; color: var(--gray); font-weight: 200;
+      margin-bottom: 24px;
+    }
+    .panel-detail {
+      font-size: 13px; line-height: 1.8; color: #999; font-weight: 200;
+    }
+
+    /* galería del panel — alturas relativas con aspect-ratio */
+    .panel-gallery {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 8px;
+      margin-bottom: 64px;
+    }
+    .panel-gallery-item {
+      overflow: hidden;
+      position: relative;
+      background: #e0dcd0;
+      aspect-ratio: 4/3;   /* altura proporcional, nunca fija */
+    }
+    .panel-gallery-item:first-child {
+      grid-row: 1 / 3;
+      aspect-ratio: unset;  /* la grande ocupa ambas filas: sin ratio fijo */
+      min-height: 300px;
+    }
+    .panel-gallery-item img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform .7s ease;
+    }
+    .panel-gallery-item:hover img { transform: scale(1.05); }
+    .panel-gallery-placeholder {
+      width: 100%; height: 100%;
+      min-height: 140px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px; background: #e8e4d8;
+    }
+    .panel-gallery-placeholder svg { width: 32px; height: 32px; opacity: .3; }
+    .panel-gallery-placeholder span {
+      font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: #aaa; font-weight: 400; text-align: center;
+      padding: 0 8px;
+    }
+
+    /* lista de aspectos del servicio — nunca recorta el texto */
+    .panel-aspects {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+    }
+    .aspect-item {
+      padding: 32px 40px 32px 0;
+      border-right: 1px solid var(--line);
+      display: flex; flex-direction: column; gap: 10px;
+      /* SIN overflow hidden, SIN altura fija */
+    }
+    .aspect-item:first-child { padding-left: 0; }
+    .aspect-item:last-child  { border-right: none; padding-right: 0; }
+    .aspect-item + .aspect-item { padding-left: 40px; }
+    .aspect-num   { font-size: 9px; letter-spacing: 0.3em; color: #ccc; font-weight: 400; flex-shrink: 0; }
+    .aspect-title { font-size: 15px; font-weight: 600; color: var(--black); }
+    .aspect-desc  { font-size: 13px; line-height: 1.7; color: var(--gray); font-weight: 200; }
+
+    /* botón cerrar panel */
+    .panel-close {
+      display: flex; align-items: center; gap: 10px;
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font); font-size: 10px;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gray); font-weight: 400;
+      margin-top: 48px; padding: 0; transition: color .2s;
+    }
+    .panel-close:hover { color: var(--black); }
+    .panel-close svg { width: 14px; height: 14px; }
+
+    /* ── SECCIÓN BUILD ──────────────────────── */
+    .build-section {
+      padding: 8% var(--side);
+      display: grid; grid-template-columns: 35% 1fr;
+      gap: 60px; align-items: start; border-top: 1px solid var(--line);
+    }
+    .build-title { font-size: 40px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; color: var(--black); }
+    .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 48px; }
+    .feature-item { display: flex; flex-direction: column; gap: 10px; }
+    .feature-item svg { width: 22px; height: 22px; }
+    .feature-title { font-size: 14px; font-weight: 300; color: var(--black); line-height: 1.4; }
+    .feature-desc { font-size: 12px; font-weight: 200; color: var(--gray); line-height: 1.5; }
+
+    /* ── CTA ───────────────────────────────── */
+    .cta-section {
+      margin: 0 var(--side) 8%;
+      display: grid; grid-template-columns: 1fr 1fr;
+      min-height: 460px; border: 1px solid var(--line);
+    }
+    .cta-img {
+      background-image: url('/wp-content/uploads/2026/06/zuma-ibiza-19-2.jpg');
+      background-size: cover; background-position: center; min-height: 300px;
+    }
+    .cta-body {
+      background: var(--black); padding: 60px 52px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .cta-tagline { font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: rgba(247,244,235,.4); }
+    .cta-title { font-size: 36px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.25; color: var(--cream); }
+    .cta-desc { font-size: 14px; line-height: 1.75; color: rgba(247,244,235,.55); font-weight: 200; }
+    .cta-btn {
+      display: inline-block; border: 1px solid rgba(247,244,235,.5);
+      color: var(--cream); font-size: 10px; letter-spacing: 0.22em;
+      text-transform: uppercase; padding: 14px 28px; font-family: var(--font);
+      font-weight: 400; text-decoration: none; border-radius: 50px;
+      width: fit-content; transition: background .25s, color .25s, border-color .25s;
+    }
+    .cta-btn:hover { background: var(--cream); color: var(--black); border-color: var(--cream); }
+
+    /* ── FOOTER ─────────────────────────────── */
+    .site-footer {
+      border-top: 1px solid var(--line); padding: 28px var(--side);
+      display: flex; align-items: center; justify-content: space-between; background: var(--cream);
+    }
+    .footer-logo img { height: 45px; width: auto; opacity: .65; }
+    .footer-nav ul { list-style: none; display: flex; gap: 28px; }
+    .footer-nav a { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; color: var(--gray); font-weight: 400; transition: color .2s; }
+    .footer-nav a:hover { color: var(--black); }
+    .footer-copy { font-size: 10px; color: #aaa; font-weight: 300; }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+
+    /* Pantallas medianas: hasta 1200px — aparece el menú hamburguesa ANTES de que se rompa */
+    @media (max-width: 1200px) {
+      :root { --side: clamp(16px, 5vw, 80px); }
+
+      /* Mostrar menú hamburguesa */
+      .site-nav { display: none; }
+      .nav-burger { display: flex; }
+
+      .services-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 460px 460px;
+      }
+      .service-card:nth-child(1) { grid-column: 1 / 3; }
+
+      /* panel body padding más compacto */
+      .service-panel-body { padding: 60px var(--side); }
+
+      /* panel header en columna cuando el espacio aprieta */
+      .panel-header { gap: 40px; }
+      .panel-header-right { max-width: 360px; }
+
+      /* galería: 2 columnas, imagen grande arriba full width */
+      .panel-gallery {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+      }
+      .panel-gallery-item:first-child {
+        grid-row: auto;
+        grid-column: 1 / 3;
+        aspect-ratio: 16/7;
+        min-height: unset;
+      }
+      .panel-gallery-item { aspect-ratio: 4/3; }
+
+      /* aspectos: 2 columnas en tablet */
+      .panel-aspects { grid-template-columns: 1fr 1fr; }
+      .aspect-item:nth-child(2) { border-right: none; }
+      .aspect-item:nth-child(3) {
+        grid-column: 1 / 3;
+        border-right: none;
+        border-top: 1px solid var(--line);
+        padding-left: 0;
+        padding-top: 32px;
+      }
+
+      .build-section { grid-template-columns: 1fr; gap: 32px; }
+      .build-title { font-size: 32px; }
+      .cta-title { font-size: 28px; }
+      .cta-body { padding: 44px 36px; }
+    }
+
+    /* Tablet pequeña: hasta 768px */
+    @media (max-width: 768px) {
+      :root { --side: 20px; }
+
+      .services-intro { flex-direction: column; gap: 20px; padding: 40px var(--side) 32px; }
+      .services-intro-text { max-width: 100%; }
+
+      .services-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 360px);
+      }
+      .service-card:nth-child(1) { grid-column: auto; }
+      .service-card { border-right: none; border-bottom: 1px solid var(--line); }
+
+      /* en móvil: desc y botón siempre visibles */
+      .service-card-desc { opacity: 1; transform: none; transition: none; }
+      .service-card-btn  { opacity: 1; transform: none; transition: none; }
+
+      /* panel */
+      .service-panel-body { padding: 48px var(--side); }
+      .panel-header {
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 40px;
+        padding-bottom: 32px;
+      }
+      .panel-header-right { max-width: 100%; }
+
+      /* galería: 1 columna en móvil */
+      .panel-gallery {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        margin-bottom: 40px;
+      }
+      .panel-gallery-item {
+        aspect-ratio: 16/9;
+      }
+      .panel-gallery-item:first-child {
+        grid-row: auto;
+        grid-column: auto;
+        aspect-ratio: 16/9;
+        min-height: unset;
+      }
+
+      /* aspectos: 1 columna, sin bordes laterales */
+      .panel-aspects { grid-template-columns: 1fr; }
+      .aspect-item {
+        padding: 28px 0;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+      .aspect-item:first-child { padding-left: 0; }
+      .aspect-item + .aspect-item { padding-left: 0; }
+      .aspect-item:last-child { border-bottom: none; }
+      /* anular la regla de tablet */
+      .aspect-item:nth-child(2) { border-right: none; }
+      .aspect-item:nth-child(3) {
+        grid-column: auto;
+        border-top: none;
+        padding-top: 28px;
+      }
+
+      .panel-close { margin-top: 36px; }
+
+      .build-section { padding: 10% var(--side); }
+      .build-title { font-size: 26px; }
+      .features-grid { grid-template-columns: 1fr; gap: 24px; }
+      .cta-section { margin: 0 var(--side) 12%; grid-template-columns: 1fr; }
+      .cta-img { min-height: 220px; }
+      .cta-body { padding: 36px 28px; }
+      .cta-title { font-size: 24px; }
+      .site-footer { flex-direction: column; gap: 18px; text-align: center; }
+      .footer-nav ul { justify-content: center; }
+    }
+
+    /* Móvil pequeño: hasta 480px */
+    @media (max-width: 480px) {
+      .header-logo img { height: 60px; }
+      .build-title { font-size: 22px; }
+      .cta-title { font-size: 20px; }
+      .services-grid { grid-template-rows: repeat(3, 300px); }
+      .service-panel-body { padding: 40px var(--side); }
+      .panel-intro { font-size: 14px; }
+      .aspect-title { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ══════════════════════════════ -->
+<header class="site-header">
+  <div class="header-logo">
+    <a href="home-signum">
+      <img src="/wp-content/uploads/2024/09/LOGO-SIGNUM.png" alt="Signum Projects">
+    </a>
+  </div>
+  <nav class="site-nav">
+    <ul>
+      <li><a href="home-signum" class="active">Home</a></li>
+      <li><a href="/conocenos">Conócenos</a></li>
+      <li><a href="/proyectos">Proyectos</a></li>
+      <li><a href="/contact">Contacto</a></li>
+    </ul>
+  </nav>
+  <button class="nav-burger" id="burger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="home-signum">Home</a>
+  <a href="/conocenos">Conócenos</a>
+  <a href="/proyectos">Proyectos</a>
+  <a href="/contact">Contacto</a>
+</div>
+
+<!-- ═══ MARQUEE ══════════════════════════════ -->
+<div class="hero-marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-item">
+      <span class="marquee-word">Compromiso</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Efectividad</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Creatividad</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Ilusión</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Diseño</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Excelencia</span><span class="marquee-sep"></span>
+    </div>
+    <div class="marquee-item" aria-hidden="true">
+      <span class="marquee-word">Compromiso</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Efectividad</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Creatividad</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Ilusión</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Diseño</span><span class="marquee-sep"></span>
+      <span class="marquee-word">Excelencia</span><span class="marquee-sep"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN ══════════════════════════════════ -->
+<main>
+
+  <!-- Intro de servicios -->
+  <div class="services-intro">
+    <h2 class="services-intro-title">Nuestros<br><em>servicios</em></h2>
+    <p class="services-intro-text"><strong>Tres disciplinas. Una misma filosofía: transformar espacios en experiencias que perduran. Explora cada área para conocer en detalle nuestro proceso, materiales y proyectos.</strong></p>
+  </div>
+
+  <!-- ── GRID ASIMÉTRICO ─────────────────────── -->
+  <div class="services-grid">
+
+    <!-- CARD 1 – CONSTRUCCIÓN -->
+    <div class="service-card" data-panel="construccion" tabindex="0" role="button" aria-expanded="false" aria-label="Ver más sobre Construcción">
+      <div class="service-card-bg" style="background-image: url('/wp-content/uploads/2026/06/zuma-ibiza-19.jpg');"></div>
+      <div class="service-card-overlay"></div>
+      <span class="service-card-num">01</span>
+      <div class="service-card-content">
+        <span class="service-card-label">Servicio</span>
+        <h3 class="service-card-title">Construcción</h3>
+        <p class="service-card-desc"><strong>Obra integral para hoteles, restaurantes y espacios comerciales. Del boceto a la entrega, con total transparencia en cada etapa.</strong></p>
+        <span class="service-card-btn">
+          Explorar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- CARD 2 – ROTULACIÓN -->
+    <div class="service-card" data-panel="rotulacion" tabindex="0" role="button" aria-expanded="false" aria-label="Ver más sobre Rotulación">
+      <div class="service-card-bg" style="background-image: url('/wp-content/uploads/2026/06/Rotulacio-4k.png');"></div>
+      <div class="service-card-overlay"></div>
+      <span class="service-card-num">02</span>
+      <div class="service-card-content">
+        <span class="service-card-label">Servicio</span>
+        <h3 class="service-card-title">Rotulación</h3>
+        <p class="service-card-desc"><strong>Señalética, rótulos y elementos de identidad visual que comunican la marca con precisión y elegancia en cada punto de contacto.</strong></p>
+        <span class="service-card-btn">
+          Explorar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- CARD 3 – STANDS -->
+    <div class="service-card" data-panel="stands" tabindex="0" role="button" aria-expanded="false" aria-label="Ver más sobre Stands">
+      <div class="service-card-bg" style="background-image: url('/wp-content/uploads/2026/06/stand-ao-1-scaled-1.jpg');"></div>
+      <div class="service-card-overlay"></div>
+      <span class="service-card-num">03</span>
+      <div class="service-card-content">
+        <span class="service-card-label">Servicio</span>
+        <h3 class="service-card-title">Stands</h3>
+        <p class="service-card-desc"><strong>Diseño y montaje de stands para ferias y eventos. Presencia impactante, estructuras eficientes y una identidad de marca que no pasa desapercibida.</strong></p>
+        <span class="service-card-btn">
+          Explorar
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </div>
+
+  </div><!-- /services-grid -->
+
+  <!-- ══════════════════════════════════════════
+       PANELES "A FONDO"
+  ══════════════════════════════════════════ -->
+
+  <!-- PANEL: CONSTRUCCIÓN -->
+  <div class="service-panel" id="panel-construccion" aria-hidden="true">
+    <div class="service-panel-inner">
+      <div class="service-panel-body">
+      <div class="panel-header">
+        <div class="panel-header-left">
+          <p class="panel-eyebrow">Servicio 01</p>
+          <h2 class="panel-title">Construcción</h2>
+        </div>
+        <div class="panel-header-right">
+          <p class="panel-intro"><strong>Nos encargamos de la dirección y ejecución de obra completa. Trabajamos con equipos propios y proveedores de confianza para garantizar plazos, calidad y transparencia total.</strong></p>
+          <p class="panel-detail">Especializados en hoteles, restaurantes y espacios comerciales de alta exigencia. Cada proyecto se gestiona con un responsable de obra dedicado, informes de avances y presupuesto cerrado desde el inicio. Sin sorpresas.</p>
+        </div>
+      </div>
+      <div class="panel-gallery">
+        <div class="panel-gallery-item">
+          <img src="/wp-content/uploads/2026/06/zuma-ibiza-19.jpg" alt="Construcción – imagen principal">
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2026/06/Zuma-madrid3.jpg" alt="Construcción – imagen1">
+          </div>
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2025/10/photo-1.jpeg" alt="Construcción – imagen2">
+          </div>
+        </div>
+        <div class="panel-gallery-item">
+          <img src="/wp-content/uploads/2025/02/odmadrid_05-rooms_04_cornerdeluxeterrace-001.jpg" alt="Construcción – detalle">
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2026/06/Zuma-madrid3-2-4k.png" alt="Construcción – imagen3">
+          </div>
+        </div>
+      </div>
+      <div class="panel-aspects">
+        <div class="aspect-item">
+          <span class="aspect-num">01</span>
+          <h4 class="aspect-title">Equipo  de trabajo profesional</h4>
+          <p class="aspect-desc">Un eqquipo dedicado a cada fase del proyecto, cimentación, estructura, instalaciones, acabados. Tú siempre sabes el estado real del proyecto.</p>
+        </div>
+        <div class="aspect-item">
+          <span class="aspect-num">02</span>
+          <h4 class="aspect-title">Materiales premium</h4>
+          <p class="aspect-desc">Seleccionamos proveedores nacionales e internacionales según las exigencias estéticas y funcionales de cada espacio. Sin concesiones en calidad.</p>
+        </div>
+        <div class="aspect-item">
+          <span class="aspect-num">03</span>
+          <h4 class="aspect-title">Entrega en plazo</h4>
+          <p class="aspect-desc">Presupuesto cerrado y calendario definido desde el inicio. Nuestro historial de entregas a tiempo nos avala en más de 80 proyectos completados.</p>
+        </div>
+      </div>
+      <button class="panel-close" data-close="construccion" aria-label="Cerrar panel Construcción">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Cerrar
+      </button>
+      </div><!-- /service-panel-body -->
+    </div>
+  </div>
+
+  <!-- PANEL: ROTULACIÓN -->
+  <div class="service-panel" id="panel-rotulacion" aria-hidden="true">
+    <div class="service-panel-inner">
+      <div class="service-panel-body">
+      <div class="panel-header">
+        <div class="panel-header-left">
+          <p class="panel-eyebrow">Servicio 02</p>
+          <h2 class="panel-title">Rotulación</h2>
+        </div>
+        <div class="panel-header-right">
+          <p class="panel-intro"><strong>La identidad visual de un espacio no termina en el interiorismo. Los rótulos, la señalética y los elementos gráficos integrados son parte esencial de la experiencia del cliente y de la imagen de marca.</strong></p>
+          <p class="panel-detail">Diseñamos y fabricamos todo tipo de rotulación: fachadas con letras corpóreas, vinilado de cristales, señalética interior, rótulos luminosos y elementos decorativos personalizados. Fabricación propia y montaje incluido.</p>
+        </div>
+      </div>
+      <div class="panel-gallery">
+        <div class="panel-gallery-item">
+          <img src="/wp-content/uploads/2026/06/Rotulacio-8.jpeg" alt="Rotulación – imagen principal">
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2026/06/Rotulacion-2-scaled.jpg" alt="Rotulación – imagen1">
+          </div>
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2026/06/aiease_1781076187687.png" alt="Rotulación – imagen2">
+          </div>
+        </div>
+        <div class="panel-gallery-item">
+          <img src="/wp-content/uploads/2026/06/Rotulacio-9-1.jpg" alt="Rotulación – detalle">
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2026/06/Rotulacio-7.jpg" alt="Rotulación – imagen3">
+          </div>
+        </div>
+      </div>
+      <div class="panel-aspects">
+        <div class="aspect-item">
+          <span class="aspect-num">01</span>
+          <h4 class="aspect-title">Letras corpóreas</h4>
+          <p class="aspect-desc">Fabricación en aluminio, acero inoxidable o materiales compuestos. Iluminación interior LED, retroiluminación o acabado mate según el concepto del espacio.</p>
+        </div>
+        <div class="aspect-item">
+          <span class="aspect-num">02</span>
+          <h4 class="aspect-title">Vinilado y señalética</h4>
+          <p class="aspect-desc">Vinilados de alta calidad para escaparates, mamparas y suelos. Señalética interior coherente con la imagen de marca y normativa de accesibilidad.</p>
+        </div>
+        <div class="aspect-item">
+          <span class="aspect-num">03</span>
+          <h4 class="aspect-title">Elementos decorativos</h4>
+          <p class="aspect-desc">Murales, texturas, elementos gráficos tridimensionales que refuerzan la identidad del espacio y generan puntos de atención memorables.</p>
+        </div>
+      </div>
+      <button class="panel-close" data-close="rotulacion" aria-label="Cerrar panel Rotulación">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Cerrar
+      </button>
+      </div><!-- /service-panel-body -->
+    </div>
+  </div>
+
+  <!-- PANEL: STANDS -->
+  <div class="service-panel" id="panel-stands" aria-hidden="true">
+    <div class="service-panel-inner">
+      <div class="service-panel-body">
+      <div class="panel-header">
+        <div class="panel-header-left">
+          <p class="panel-eyebrow">Servicio 03</p>
+          <h2 class="panel-title">Stands</h2>
+        </div>
+        <div class="panel-header-right">
+          <p class="panel-intro"><strong>En una feria, tienes segundos para captar la atención. Diseñamos stands que generan impacto inmediato: espacios que comunican los valores de la marca, facilitan la interacción con el visitante y son eficientes en montaje y desmontaje.</strong></p>
+          <p class="panel-detail">Trabajamos desde el concepto hasta la instalación final, incluyendo diseño 3D, producción de materiales, logística, transporte y montaje en destino. Stands modulares o personalizados, para cualquier formato de evento o superficie.</p>
+        </div>
+      </div>
+      <div class="panel-gallery">
+        <div class="panel-gallery-item">
+          <img src="/wp-content/uploads/2026/06/stand-ao-1-scaled-4k.png" alt="Stands – imagen principal">
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2026/06/Stand-Ciaxa-2-1-scaled.jpg" alt="Stands – imagen1">
+          </div>
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2026/06/Stand-SCM-1-1-scaled.jpg" alt="Stands – imagen2">
+          </div>
+        </div>
+        <div class="panel-gallery-item">
+          <img src="/wp-content/uploads/2026/06/Rotulacio-6-1.jpg" alt="Stands – detalle">
+        </div>
+        <div class="panel-gallery-item">
+          <div class="panel-gallery-placeholder">
+            <img src="/wp-content/uploads/2026/06/stand-sanitas.jpg" alt="Stands – imagen3">
+          </div>
+        </div>
+      </div>
+      <div class="panel-aspects">
+        <div class="aspect-item">
+          <span class="aspect-num">01</span>
+          <h4 class="aspect-title">Diseño 3D previo</h4>
+          <p class="aspect-desc">Antes de producir una sola pieza, ves tu stand en detalle con renders fotorrealistas. Aprobación visual garantizada antes de la fabricación.</p>
+        </div>
+        <div class="aspect-item">
+          <span class="aspect-num">02</span>
+          <h4 class="aspect-title">Producción y logística</h4>
+          <p class="aspect-desc">Fabricación de todos los elementos en nuestros talleres y transporte al recinto ferial. Coordinación con los organizadores y cumplimiento de normativas de espacio.</p>
+        </div>
+        <div class="aspect-item">
+          <span class="aspect-num">03</span>
+          <h4 class="aspect-title">Montaje y desmontaje</h4>
+          <p class="aspect-desc">Equipo propio en destino para el montaje completo. Al finalizar el evento, recogemos, desmontamos y almacenamos o trasladamos los elementos reutilizables.</p>
+        </div>
+      </div>
+      <button class="panel-close" data-close="stands" aria-label="Cerrar panel Stands">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Cerrar
+      </button>
+      </div><!-- /service-panel-body -->
+    </div>
+  </div>
+
+  <!-- ═══ JUNTOS CONSTRUIREMOS ══════════════ -->
+  <section class="build-section">
+    <h2 class="build-title">Juntos construiremos tu espacio</h2>
+    <div class="features-grid">
+      <div class="feature-item">
+        <svg viewBox="0 0 27.4 30.4" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M7.995 15.005a.7.7 0 0 0-.99.99l5 5a.7.7 0 0 0 .99 0l9-9a.7.7 0 0 0-.99-.99L12.5 19.51Z"/><path d="M27.695 4.608l-13-3.78a.7.7 0 0 0-.39 0l-13 3.78A.7.7 0 0 0 .8 5.28V19.15c0 5.889 9.267 10.72 13.495 12.019a.7.7 0 0 0 .41 0C19.408 29.753 28.2 24.772 28.2 19.15V5.28a.7.7 0 0 0-.505-.672ZM26.8 19.15c0 4.393-7.198 9.017-12.298 10.617C9.4 28.136 2.2 23.494 2.2 19.15V5.806L14.5 2.229 26.8 5.806Z"/></svg>
+        <span class="feature-title">Satisfaction garantizada</span>
+        <span class="feature-desc">Compromiso total con el resultado final del proyecto.</span>
+      </div>
+      <div class="feature-item">
+        <svg viewBox="0 0 35 29.17" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M34.36 5.849a2.188 2.188 0 0 0-1.547-.641H23.333V3.021A2.188 2.188 0 0 0 21.146.833H13.854a2.188 2.188 0 0 0-2.188 2.188V5.208H2.188A2.188 2.188 0 0 0 0 7.396v20.417A2.188 2.188 0 0 0 2.188 30h30.625A2.188 2.188 0 0 0 35 27.813V7.396a2.188 2.188 0 0 0-.64-1.547ZM13.125 3.021a.73.73 0 0 1 .73-.73h7.291a.73.73 0 0 1 .73.73v2.187h-8.75ZM33.542 27.813a.73.73 0 0 1-.73.729H2.188a.73.73 0 0 1-.73-.73V15.417h4.375v3.645a.73.73 0 0 0 .73.729h4.374a.73.73 0 0 0 .73-.73v-3.645h13.125v3.645a.73.73 0 0 0 .73.73h4.375a.73.73 0 0 0 .729-.73v-3.645h4.375Z"/></svg>
+        <span class="feature-title">Diseños personalizados</span>
+        <span class="feature-desc">Cada proyecto es único y adaptado a tu visión.</span>
+      </div>
+      <div class="feature-item">
+        <svg viewBox="0 0 27.48 26.08" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M27.485 9.317a.925.925 0 0 0-.316-.437.744.744 0 0 0-.477-.149H18.036L14.835.599a.989.989 0 0 0-.335-.362.817.817 0 0 0-.89 0 .987.987 0 0 0-.334.362L10.188 8.731l-8.656.081a.732.732 0 0 0-.47.151.911.911 0 0 0-.309.435.927.927 0 0 0-.01.546.807.807 0 0 0 .293.43l7.083 5.677-2.318 9.06a.964.964 0 0 0 .031.525.814.814 0 0 0 1.244.402L14.169 21.06l7.083 4.88a.807.807 0 0 0 .467.147.735.735 0 0 0 .524-.033.815.815 0 0 0 .295-.41.947.947 0 0 0 .017-.533L20.133 16.1l7.083-5.807a.83.83 0 0 0 .281-.435.945.945 0 0 0-.012-.54Z"/></svg>
+        <span class="feature-title">Acabados de primera calidad</span>
+        <span class="feature-desc">Proveedores seleccionados de primer nivel.</span>
+      </div>
+      <div class="feature-item">
+        <svg viewBox="0 0 20.06 30.12" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M19.978 13.911a.427.427 0 0 0-.196-.27L9.755 1.107a.628.628 0 0 0-.841-.088.564.564 0 0 0-.126.176L.226 17.257c-.015.01-.035.014-.049.026a.628.628 0 0 0-.176.72.623.623 0 0 0 .081.117c.004.007.002.016.006.024.007.012.022.017.03.029.012.014.018.033.032.046L10.619 30.638A.614.614 0 0 0 10.936 31a.741.741 0 0 0 .276 0 .615.615 0 0 0 .565-.289l8.161-16.321a.615.615 0 0 0 .04-.479Z"/></svg>
+        <span class="feature-title"><strong>Estilo contemporaneo</strong></span>
+        <span class="feature-desc"><strong>Diseño contemporáneo y atemporal.</strong></span>
+      </div>
+      <div class="feature-item">
+        <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.1"><circle cx="15" cy="15" r="13.5"/><path d="M15 8v7.5l4.5 4.5"/></svg>
+        <span class="feature-title"><strong>Entregas en plazo</strong></span>
+        <span class="feature-desc"><strong>Gestión eficiente para cumplir cada etapa del proyecto.</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ══════════════════════════════════ -->
+  <div class="cta-section">
+    <div class="cta-img" role="img" aria-label="Proyecto de interiorismo Signum"></div>
+    <div class="cta-body">
+      <p class="cta-tagline">De tu imaginación a la realidad</p>
+      <h2 class="cta-title">Ofrecemos un servicio completo de diseño, personalizado.</h2>
+      <p class="cta-desc">Signum Projects se enfoca en el mundo de la construcción dándole una forma revolucionaria al proceso constructivo, siendo totalmente transparentes.</p>
+      <a href="/contact" class="cta-btn">Saber más</a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ══ FOOTER ════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-logo">
+    <a href="home-signum">
+      <img src="/wp-content/uploads/2024/05/logo_x1.png" alt="Signum Projects">
+    </a>
+  </div>
+  <nav class="footer-nav">
+    <ul>
+      <li><a href="/conocenos">Conócenos</a></li>
+      <li><a href="/proyectos">Proyectos</a></li>
+      <li><a href="/contact">Contacto</a></li>
+    </ul>
+  </nav>
+  <p class="footer-copy">© 2025 Signum Projects. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+  /* ── Burger ─────────────────────────────── */
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  /* ── Lógica de paneles "a fondo" ─────────── */
+  const cards  = document.querySelectorAll('.service-card');
+  const panels = document.querySelectorAll('.service-panel');
+  const closes = document.querySelectorAll('.panel-close');
+
+  function openPanel(id) {
+    /* cerrar todos primero */
+    panels.forEach(p => {
+      p.classList.remove('open');
+      p.setAttribute('aria-hidden', 'true');
+    });
+    cards.forEach(c => c.setAttribute('aria-expanded', 'false'));
+
+    const panel = document.getElementById('panel-' + id);
+    const card  = document.querySelector('[data-panel="' + id + '"]');
+    if (!panel) return;
+
+    panel.classList.add('open');
+    panel.setAttribute('aria-hidden', 'false');
+    if (card) card.setAttribute('aria-expanded', 'true');
+
+    /* scroll suave al panel */
+    setTimeout(() => {
+      panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  }
+
+  function closePanel(id) {
+    const panel = document.getElementById('panel-' + id);
+    const card  = document.querySelector('[data-panel="' + id + '"]');
+    if (!panel) return;
+    panel.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    if (card) {
+      card.setAttribute('aria-expanded', 'false');
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  /* click en tarjeta */
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.panel;
+      const panel = document.getElementById('panel-' + id);
+      if (panel && panel.classList.contains('open')) {
+        closePanel(id);
+      } else {
+        openPanel(id);
+      }
+    });
+    /* teclado accesible */
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+
+  /* botones cerrar */
+  closes.forEach(btn => {
+    btn.addEventListener('click', () => closePanel(btn.dataset.close));
+  });
+</script>
+</body>
+</html>
